@@ -1,0 +1,34 @@
+@use '../../shared/styles/new-theme-mixins.module.scss' as *;
+
+.layout {
+	@include theme(white) {
+		background: linear-gradient(to bottom, #dbdbdb, #b1c1de);
+		a,
+		button {
+			color: #111;
+		}
+	}
+	@include theme(black) {
+		a,
+		button {
+			color: #fff;
+		}
+		color: #fff;
+		background: radial-gradient(
+				800px 300px at 20% 10%,
+				rgba(120, 170, 255, 0.18),
+				transparent 60%
+			),
+			radial-gradient(
+				600px 260px at 85% 30%,
+				rgba(120, 255, 170, 0.1),
+				transparent 55%
+			),
+			radial-gradient(
+				700px 260px at 55% 90%,
+				rgba(255, 255, 255, 0.06),
+				transparent 60%
+			),
+			linear-gradient(180deg, #0b0f16 0%, #070a0f 100%);
+	}
+}

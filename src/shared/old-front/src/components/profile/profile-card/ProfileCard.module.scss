@@ -1,0 +1,58 @@
+@use '../../../shared/styles/new-page-block-mixins.module.scss' as *;
+@use '../../../shared/styles/new-image-mixins.module.scss' as *;
+@use '../../../shared/styles/new-theme-mixins.module.scss' as *;
+@use '../../../shared/styles/new-buttons-mixins.module.scss' as *;
+
+.block {
+	@include pageBlockContainer($w: 295px);
+	@include pageBlockContentContainer;
+	&__top {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 15px;
+	}
+	&__imageContainer {
+		position: relative;
+	}
+	&__image {
+		@include imageCardContainer(150px, 150px, 75px);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		border: 1px solid rgba(255, 255, 255, 0.261);
+		position: relative;
+	}
+	&__changePhoto {
+		width: 30px;
+		height: 30px;
+		border-radius: 15px;
+		background-color: rgb(54, 54, 180);
+		position: absolute;
+		right: 10px;
+		bottom: 10px;
+	}
+	&__title {
+		font-size: 20px;
+		font-weight: 500;
+	}
+	&__subtitle {
+		font-weight: 200;
+	}
+	&__items {
+		padding: 10px;
+	}
+	&__item {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		height: 40px;
+		border-top: 1px solid rgba(255, 255, 255, 0.41);
+		@include theme('white') {
+			border-top: 1px solid rgba(87, 87, 87, 0.41);
+		}
+	}
+	&__change {
+		@include blackWhiteButton(260px, 40px, 20px, 14px);
+	}
+}

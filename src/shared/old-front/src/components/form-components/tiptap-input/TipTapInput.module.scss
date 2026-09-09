@@ -1,0 +1,101 @@
+@use '../../../shared/styles/new-theme-mixins.module.scss' as *;
+
+.tiptap {
+	&__header {
+		display: flex;
+		gap: 5px;
+		margin-bottom: 20px;
+	}
+	&__sep {
+		width: 1px;
+		height: 25px;
+		@include theme('black') {
+			background-color: white;
+		}
+		@include theme('white') {
+			background-color: black;
+		}
+	}
+	&__button {
+		height: 25px;
+		padding: 0 10px;
+		border-radius: 5px;
+		@include theme('black') {
+			color: white;
+			border: 1px solid white;
+		}
+		@include theme('white') {
+			color: black;
+			border: 1px solid #333;
+		}
+		&.active {
+			border: 1px solid blue;
+		}
+		&.popup {
+			position: relative;
+			& div {
+				padding: 20px;
+				display: none;
+				position: absolute;
+				top: 30px;
+				right: 0;
+				width: 200px;
+				border-radius: 10px;
+				@include theme('black') {
+					border: 1px solid white;
+					background-color: black;
+				}
+				@include theme('white') {
+					border: 1px solid #333;
+					background-color: white;
+				}
+			}
+			&:hover {
+				& div {
+					display: block;
+				}
+			}
+		}
+	}
+	&__editor {
+		width: 100%;
+		padding: 10px 12px;
+		min-height: 80px;
+		border-radius: 10px;
+		@include theme('black') {
+			color: white;
+			border: 1px solid white;
+		}
+		@include theme('white') {
+			color: black;
+			border: 1px solid #333;
+		}
+
+		:global(.ProseMirror) {
+			outline: none;
+			min-height: 140px;
+		}
+
+		:global(.ProseMirror p) {
+			margin: 0 0 10px;
+		}
+
+		:global(.ProseMirror h2) {
+			margin: 0 0 10px;
+			font-size: 18px;
+			font-weight: 700;
+		}
+
+		:global(.ProseMirror h3) {
+			margin: 0 0 10px;
+			font-size: 16px;
+			font-weight: 700;
+		}
+
+		:global(.ProseMirror ul),
+		:global(.ProseMirror ol) {
+			margin: 0 0 10px;
+			padding-left: 22px;
+		}
+	}
+}

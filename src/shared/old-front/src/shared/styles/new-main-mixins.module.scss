@@ -1,0 +1,28 @@
+@mixin bluredBackground {
+	border-radius: 20px;
+	background: rgba(255, 255, 255, 0.06);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	backdrop-filter: blur(14px);
+	-webkit-backdrop-filter: blur(14px);
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15),
+		inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+@mixin standartBluredBlock($padding: 5px) {
+	@include bluredBackground;
+	border-radius: 25px;
+	padding: $padding;
+}
+
+@mixin noScrollbar {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+
+	&::-webkit-scrollbar {
+		display: none;
+	}
+}
+
+@mixin appBackground {
+	background: linear-gradient(to bottom, #dbdbdb, #b1c1de);
+}

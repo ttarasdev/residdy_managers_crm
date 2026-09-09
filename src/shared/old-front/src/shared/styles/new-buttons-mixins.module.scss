@@ -1,0 +1,49 @@
+@use './new-theme-mixins.module.scss' as *;
+
+@mixin blackWhiteButton($w: 120px, $h: 40px, $br: 10px, $fs: 14px) {
+	width: $w;
+	height: $h;
+	border-radius: $br;
+	font-size: $fs;
+	@include theme('white') {
+		&[class] {
+			background-color: black;
+			color: white;
+		}
+	}
+	@include theme('black') {
+		&[class] {
+			background-color: white;
+			color: black;
+			border: 1px solid black;
+		}
+	}
+}
+
+@mixin borderButton($w: 120px, $h: 40px, $br: 10px, $fs: 14px) {
+	width: $w;
+	height: $h;
+	border-radius: $br;
+	font-size: $fs;
+	border: 1px solid rgba(0, 0, 0, 0.674);
+	@include theme('black') {
+		border: 1px solid rgba(255, 255, 255, 0.413);
+		color: white;
+	}
+}
+
+@mixin grayBorderWithIconButton($w: 120px, $h: 40px, $fs: 14px, $fw: 200) {
+	width: $w;
+	height: $h;
+	border-radius: 30px;
+	font-size: $fs;
+	font-weight: $fw;
+	display: flex;
+	justify-content: center;
+	gap: 10px;
+	align-items: center;
+	border: 1px solid rgba(164, 160, 160, 0.626);
+	@include theme('black') {
+		border: 1px solid rgba(221, 221, 221, 0.626);
+	}
+}

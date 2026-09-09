@@ -1,0 +1,16 @@
+@use './new-main-mixins.module.scss' as *;
+
+@mixin textBluredCard($w: 100px, $h: 30px, $p: 5px) {
+	@include bluredBackground;
+	width: $w;
+	height: $h;
+	padding: $p;
+}
+
+@mixin blockWithGrayBorder($w: 50px, $h: 50px, $padding: 5px, $br: 5px) {
+	width: $w;
+	height: $h;
+	border: 1px solid rgba(162, 162, 162, 0.644);
+	border-radius: $br;
+	padding: $padding;
+}

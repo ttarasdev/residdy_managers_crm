@@ -1,0 +1,59 @@
+@use '../../../shared/styles/new-theme-mixins.module.scss' as *;
+
+.container {
+	@include theme('black') {
+		color: white;
+	}
+	:global(.ProseMirror) {
+		line-height: 1.65;
+		font-size: 16px;
+	}
+
+	:global(p) {
+		margin: 0 0 14px;
+	}
+
+	:global(h2) {
+		margin: 24px 0 14px;
+		font-size: 24px;
+		font-weight: 700;
+	}
+
+	:global(h3) {
+		margin: 20px 0 12px;
+		font-size: 20px;
+		font-weight: 600;
+	}
+
+	:global(strong) {
+		font-weight: 700;
+	}
+
+	:global(em) {
+		font-style: italic;
+	}
+
+	:global(u) {
+		text-decoration: underline;
+	}
+
+	:global(s) {
+		text-decoration: line-through;
+		opacity: 0.75;
+	}
+
+	:global(ul),
+	:global(ol) {
+		margin: 0 0 14px;
+		padding-left: 24px;
+	}
+
+	:global(li) {
+		margin-bottom: 6px;
+	}
+
+	:global(a) {
+		color: #2563eb;
+		text-decoration: underline;
+	}
+}

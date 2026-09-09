@@ -1,0 +1,45 @@
+@use '../../../../shared/styles/new-image-mixins.module.scss' as *;
+@use '../../../../shared/styles/new-buttons-mixins.module.scss' as *;
+@use '../../../../shared/styles/new-theme-mixins.module.scss' as *;
+@use '../../../../shared/styles/new-custom-backs.module.scss' as *;
+
+.top {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	&__variant {
+		flex-shrink: 0;
+		@include imageCardContainer(100px, 60px, 10px);
+	}
+	&__iconContainer {
+		flex-shrink: 0;
+		height: 50px;
+		width: 50px;
+		border-radius: 25px;
+		@include iconBack;
+	}
+	&__icon {
+		@include imageCardContainer(50px, 50px, 25px);
+	}
+	&__info {
+		flex: 1;
+		height: 50px;
+	}
+	&__title {
+		font-weight: 500;
+		font-size: 16px;
+		margin-bottom: 5px;
+	}
+	&__subtitle {
+		max-width: 350px;
+		color: rgb(170, 167, 167);
+		font-weight: 200;
+	}
+	&__buttons {
+		display: flex;
+		gap: 10px;
+	}
+	&__button {
+		@include grayBorderWithIconButton;
+	}
+}

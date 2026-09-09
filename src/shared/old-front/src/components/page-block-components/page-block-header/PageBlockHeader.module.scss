@@ -1,0 +1,19 @@
+@use '../../../shared/styles/new-cards-mixins.module.scss' as *;
+
+.header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	height: 50px;
+	&__title {
+		font-size: 16px;
+		font-weight: 500;
+	}
+	&__filters {
+		display: flex;
+		gap: 5px;
+	}
+	&__add {
+		@include blockWithGrayBorder(40px, 40px, 0, 20px);
+	}
+}

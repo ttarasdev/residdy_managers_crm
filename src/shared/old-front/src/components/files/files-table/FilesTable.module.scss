@@ -1,0 +1,31 @@
+@use '../../../shared/styles/new-theme-mixins.module.scss' as *;
+@use '../../../shared/styles/new-item-page.module.scss' as *;
+
+.assets {
+	&__popup {
+		@include theme('black') {
+			background-color: #24272e;
+		}
+		@include theme('white') {
+			@include whiteBack;
+			backdrop-filter: blur(4px);
+			border: 1px solid rgba(0, 0, 0, 0.235);
+		}
+		position: absolute;
+		width: 100px;
+		right: calc(50% - 50px);
+		top: 50%;
+		border-radius: 10px;
+	}
+	&__button {
+		width: 100%;
+		padding: 9px;
+		border-radius: 10px;
+		&:hover {
+			background-color: rgb(241, 241, 241);
+			@include theme('black') {
+				background-color: black;
+			}
+		}
+	}
+}

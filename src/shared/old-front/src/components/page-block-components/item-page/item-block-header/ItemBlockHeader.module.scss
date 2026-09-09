@@ -1,0 +1,46 @@
+@use '../../../../shared/styles/new-item-page.module.scss' as *;
+
+.header {
+	padding: 0 20px;
+	height: 50px;
+	border-radius: 25px;
+	@include whiteBack;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	&__items {
+		display: flex;
+		gap: 10px;
+	}
+	&__item {
+		padding: 5px 10px;
+		border-right: 1px solid gray;
+		& span {
+			color: rgb(134, 134, 134);
+			margin-right: 5px;
+		}
+	}
+	&__statuses {
+		display: flex;
+		gap: 10px;
+	}
+	&__status {
+		padding: 3px 10px;
+		border-radius: 20px;
+	}
+}
+
+.lan {
+	color: #7b2922;
+	background-color: #f6eaec;
+}
+
+.status {
+	color: #af7d47;
+	background-color: #fbe8c8;
+}
+
+.isPopular {
+	color: #515f5a;
+	background-color: #e4ebe2;
+}

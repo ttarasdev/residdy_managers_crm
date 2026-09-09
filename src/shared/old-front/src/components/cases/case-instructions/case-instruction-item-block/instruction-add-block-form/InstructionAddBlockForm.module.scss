@@ -1,0 +1,5 @@
+@use '../../../../../shared/styles/new-form-mixins.module.scss' as *;
+
+.form {
+	@include form;
+}

@@ -1,0 +1,12 @@
+@use '../../../shared/styles/new-page-block-mixins.module.scss' as *;
+@use '../../../shared/styles/new-image-mixins.module.scss' as *;
+@use '../../../shared/styles/new-theme-mixins.module.scss' as *;
+@use '../../../shared/styles/new-buttons-mixins.module.scss' as *;
+
+.block {
+	@include pageBlockContainer($w: 700px);
+	@include pageBlockContentContainer;
+	&__logout {
+		@include blackWhiteButton(665px, 40px, 20px, 14px);
+	}
+}

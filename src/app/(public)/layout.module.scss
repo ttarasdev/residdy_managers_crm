@@ -1,0 +1,6 @@
+@use '../../shared/styles/background.mixins.scss' as *;
+
+.layout {
+    @include appBackground;
+    min-height: 100dvh;
+}

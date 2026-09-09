@@ -1,0 +1,11 @@
+@mixin imageCardContainer($width, $height, $bradius, $bg: none) {
+	position: relative;
+	width: $width;
+	height: $height;
+	border-radius: $bradius;
+	background: $bg;
+	overflow: hidden;
+	& img {
+		object-fit: cover;
+	}
+}

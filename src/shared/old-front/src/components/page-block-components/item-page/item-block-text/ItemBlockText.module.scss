@@ -1,0 +1,5 @@
+@use '../../../../shared/styles/new-cards-mixins.module.scss' as *;
+
+.block {
+	@include textBluredCard(100%, 340px, 20px);
+}

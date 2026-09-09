@@ -1,0 +1,44 @@
+@mixin gradientBorder($radius: 16px, $border: 1px, $speed: 700ms) {
+	position: relative;
+	border-radius: $radius;
+
+	&::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		padding: $border;
+		border-radius: inherit;
+
+		background: conic-gradient(
+			from -90deg,
+			rgba(120, 70, 255, 0.75) 0deg,
+			rgba(50, 120, 255, 0.75) 120deg,
+			rgba(160, 80, 255, 0.75) 240deg,
+			rgba(120, 70, 255, 0.75) 360deg
+		);
+
+		-webkit-mask: linear-gradient(#000 0 0) content-box,
+			linear-gradient(#000 0 0);
+		-webkit-mask-composite: xor;
+		mask-composite: exclude;
+
+		pointer-events: none;
+
+		opacity: 0;
+		transform: rotate(-90deg) scale(0.98);
+		animation: gradientBorderIn $speed ease forwards;
+	}
+
+	@keyframes gradientBorderIn {
+		from {
+			opacity: 0;
+			transform: rotate(-90deg) scale(0.98);
+			filter: brightness(0.7);
+		}
+		to {
+			opacity: 1;
+			transform: rotate(0deg) scale(1);
+			filter: brightness(1);
+		}
+	}
+}

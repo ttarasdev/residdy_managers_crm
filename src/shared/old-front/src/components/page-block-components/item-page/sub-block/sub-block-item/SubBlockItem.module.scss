@@ -1,0 +1,91 @@
+@use '../../../../../shared/styles/new-item-page.module.scss' as *;
+@use '../../../../../shared/styles/new-theme-mixins.module.scss' as *;
+@use '../../../../../shared/styles/new-image-mixins.module.scss' as *;
+@use '../../../../../shared/styles/new-custom-backs.module.scss' as *;
+
+.item {
+	@include whiteBack;
+	padding: 10px;
+	border-radius: 10px;
+	height: 70px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	position: relative;
+	&.active {
+		border: 1px solid blue;
+	}
+	&__iconContainer {
+		width: 50px;
+		height: 50px;
+		padding: 5px;
+		border-radius: 25px;
+		@include iconBack;
+	}
+	&__icon {
+		@include imageCardContainer(40px, 40px, 10px);
+	}
+	&__info {
+		height: 50px;
+	}
+	&__title {
+		font-size: 15px;
+		margin-bottom: 5px;
+	}
+	&__subtitle {
+		font-weight: 200;
+	}
+	&__settings {
+		position: absolute;
+		right: 10px;
+		bottom: 5px;
+	}
+	&__popup {
+		position: absolute;
+		right: 40px;
+		bottom: 5px;
+		@include whiteBack;
+		padding: 3px;
+		border-radius: 15px;
+		display: flex;
+		gap: 5px;
+	}
+	&__buttons {
+		display: flex;
+		flex-direction: column;
+		& button {
+			padding: 5px 10px;
+			border-radius: 10px;
+			&:hover {
+				background-color: rgb(241, 241, 241);
+				@include theme('black') {
+					background-color: black;
+				}
+			}
+		}
+	}
+	&__move {
+	}
+	&__up,
+	&__down {
+		border: 1px solid rgba(0, 0, 0, 0.243);
+		@include imageCardContainer(25px, 25px, 15px);
+		transform: rotate(-90deg);
+		@include theme('black') {
+			border: 1px solid rgba(202, 202, 202, 0.466);
+		}
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		&:hover {
+			background-color: rgb(241, 241, 241);
+			@include theme('black') {
+				background-color: black;
+			}
+		}
+	}
+	&__down {
+		margin-top: 3px;
+		transform: rotate(90deg);
+	}
+}

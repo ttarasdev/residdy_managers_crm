@@ -1,0 +1,85 @@
+@use '../../../shared/styles/new-theme-mixins.module.scss' as *;
+@use '../../../shared/styles/new-main-mixins.module.scss' as *;
+@use '../../../shared/styles/new-animations-block-mixins.module.scss' as *;
+
+.menu {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	transition: width 250ms ease;
+	border-radius: 15px;
+	padding: 5px;
+	width: 60px;
+	&.active {
+		width: 180px;
+		@include standartBluredBlock;
+	}
+	&__categories,
+	&__themes {
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+	}
+	.menu__title {
+		font-size: 14px;
+		max-width: 0;
+		opacity: 0;
+		transform: translateX(-6px);
+		transition: max-width 250ms ease, opacity 200ms ease,
+			transform 250ms ease;
+		color: rgb(80, 80, 80);
+		font-weight: 200;
+		@include theme(black) {
+			color: white;
+		}
+		&.active {
+			max-width: 100px;
+			opacity: 1;
+			transform: translateX(0);
+		}
+	}
+	&__item {
+		display: flex;
+		gap: 10px;
+		align-items: center;
+	}
+	&__button {
+		width: 50px;
+		height: 50px;
+		display: flex;
+		flex: 0 0 50px;
+		justify-content: center;
+		align-items: center;
+		@include bluredBackground;
+		&.moon {
+			background-color: black;
+		}
+		&.current {
+			@include gradientBorder(25px);
+		}
+		border-radius: 30px;
+	}
+	&__forbidden {
+		display: none;
+		width: 150px;
+		padding: 5px;
+		@include bluredBackground;
+		position: absolute;
+		gap: 5px;
+		left: 40px;
+		top: 90%;
+		& p {
+			font-size: 13px;
+			color: gray;
+		}
+	}
+	&__item {
+		position: relative;
+		&:hover {
+			& .menu__forbidden {
+				display: flex;
+				z-index: 1000;
+			}
+		}
+	}
+}

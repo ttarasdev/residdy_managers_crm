@@ -1,0 +1,84 @@
+@use '../../../shared/styles/new-form-mixins.module.scss' as *;
+@use '../../../shared/styles/new-theme-mixins.module.scss' as *;
+@use '../../../shared/styles/new-main-mixins.module.scss' as *;
+.label {
+	@include formLabel;
+}
+
+.select {
+	position: relative;
+	width: 100%;
+	&__trigger {
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border: 1px solid #333;
+		border-radius: 8px;
+		padding: 9px 12px;
+		font-size: 14px;
+		transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+		outline: none;
+		appearance: none;
+		@include theme('black') {
+			color: white;
+			background: rgba(37, 37, 39, 1);
+			border: 1px solid rgba(255, 255, 255, 0.08);
+			color: rgba(255, 255, 255, 0.92);
+		}
+	}
+	&__list {
+		@include appBackground;
+		position: absolute;
+		background: linear-gradient(to bottom, #dbdbdb, #b1c1de);
+		top: calc(100% + 6px);
+		left: 0;
+		right: 0;
+		background-color: white;
+		border: 1px solid #333;
+		border-radius: 8px;
+		padding: 4px;
+		z-index: 10;
+		@include theme('black') {
+			background: rgba(37, 37, 39, 1);
+		}
+	}
+	&__item {
+		width: 100%;
+		text-align: left;
+		padding: 8px 10px;
+		border-radius: 6px;
+		background: transparent;
+		border: none;
+		cursor: pointer;
+		font-size: 14px;
+
+		&:hover {
+			background: #f0f0f0;
+		}
+		@include theme('black') {
+			&:hover {
+				background: rgb(79, 79, 80);
+			}
+			border: 1px solid rgba(255, 255, 255, 0.08);
+			color: rgba(255, 255, 255, 0.92);
+		}
+	}
+}
+
+.arrow {
+	width: 6px;
+	height: 6px;
+	border-right: 2px solid #000;
+	border-bottom: 2px solid #000;
+	transform: rotate(45deg);
+	@include theme('black') {
+		border-right: 2px solid white;
+		border-bottom: 2px solid white;
+	}
+}
+
+.active {
+	background: #e6e6e6;
+	font-weight: 600;
+}

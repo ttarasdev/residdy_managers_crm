@@ -1,0 +1,15 @@
+@use '../../../../shared/styles/new-page-block-mixins.module.scss' as *;
+@use '../../../../shared/styles/new-item-page.module.scss' as *;
+
+.block {
+	@include pageBlockContainer($w: 695px, $h: 300px);
+	@include pageBlockContentContainer;
+	&__info {
+		@include whiteBack;
+		@include ItemPageItemsBlock($h: 150px);
+		padding: 10px;
+	}
+	&__label {
+		margin: 5px 0;
+	}
+}

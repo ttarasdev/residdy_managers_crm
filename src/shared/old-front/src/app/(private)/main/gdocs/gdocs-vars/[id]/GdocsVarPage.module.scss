@@ -1,0 +1,5 @@
+@use '../../../../../../shared/styles/new-page-mixins.module.scss' as *;
+
+.page {
+	@include pageContainer;
+}

@@ -1,0 +1,27 @@
+@use '../../../shared/styles/new-form-mixins.module.scss' as *;
+@use '../../../shared/styles/new-theme-mixins.module.scss' as *;
+
+.label {
+	@include formLabel;
+}
+
+.input {
+	border: 1px solid #333;
+	border-radius: 8px;
+	padding: 9px 12px;
+	font-size: 14px;
+	background-color: transparent;
+	transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+	&:focus {
+		border-color: #2563eb;
+		box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+	}
+	&::placeholder {
+		color: #999;
+	}
+	@include theme('black') {
+		background: rgba(37, 37, 39, 1);
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		color: rgba(255, 255, 255, 0.92);
+	}
+}

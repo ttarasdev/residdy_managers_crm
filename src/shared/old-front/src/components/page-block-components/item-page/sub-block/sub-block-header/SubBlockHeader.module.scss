@@ -1,0 +1,21 @@
+@use '../../../../../shared/styles/new-item-page.module.scss' as *;
+@use '../../../../../shared/styles/new-buttons-mixins.module.scss' as *;
+
+.header {
+	height: 50px;
+	border-top-left-radius: 25px;
+	border-top-right-radius: 25px;
+	@include whiteBack;
+	display: flex;
+	gap: 10px;
+	padding: 0 20px;
+	align-items: center;
+	&__title {
+		font-weight: 500;
+		font-size: 16px;
+		flex: 1;
+	}
+	&__add {
+		@include grayBorderWithIconButton(95px, 30px);
+	}
+}

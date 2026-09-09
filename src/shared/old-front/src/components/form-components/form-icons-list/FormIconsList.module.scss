@@ -1,0 +1,11 @@
+@use '../../../shared/styles/new-form-mixins.module.scss' as *;
+
+.items {
+	@include formImagesBlock;
+	&__item {
+		@include formImagesBlockItem;
+	}
+	&__image {
+		@include formImagesBlockImage;
+	}
+}

@@ -1,0 +1,22 @@
+@use '../../../../shared/styles/new-page-block-mixins.module.scss' as *;
+@use '../../../../shared/styles/new-item-page.module.scss' as *;
+@use '../../../../shared/styles/new-main-mixins.module.scss' as *;
+
+.block {
+	@include pageBlockContainer($w: 695px);
+	@include pageBlockContentContainer;
+	&__info {
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+	}
+	&__text {
+		@include whiteBack;
+		border-radius: 15px;
+		padding: 15px;
+		width: 400px;
+		height: 350px;
+		overflow-y: scroll;
+		@include noScrollbar;
+	}
+}

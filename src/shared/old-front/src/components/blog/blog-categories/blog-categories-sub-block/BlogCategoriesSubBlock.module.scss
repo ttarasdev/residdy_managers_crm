@@ -1,0 +1,5 @@
+@use '../../../../shared/styles/new-item-page.module.scss' as *;
+
+.block {
+	@include ItemPageItemsBlock;
+}

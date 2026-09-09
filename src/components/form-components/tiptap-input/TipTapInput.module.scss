@@ -1,0 +1,63 @@
+@use '../../../shared/styles/control.mixins' as *;
+.tiptap {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    &__header {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        padding: 8px;
+        border-bottom: 1px solid var(--border);
+        background: var(--surface-muted);
+    }
+    &__button {
+        @include button;
+        padding: 6px;
+        min-width: 30px;
+        min-height: 30px;
+        &.active,
+        &[aria-pressed='true'] {
+            color: var(--accent);
+            background: var(--accent-soft);
+        }
+    }
+    &__sep {
+        width: 1px;
+        background: var(--border);
+        margin: 0 3px;
+    }
+    &__editor {
+        padding: 14px;
+        background: var(--surface);
+        :global(.ProseMirror) {
+            outline: none;
+            min-height: 180px;
+        }
+        :global(.ProseMirror p) {
+            margin-bottom: 10px;
+        }
+        :global(.ProseMirror ul),
+        :global(.ProseMirror ol) {
+            padding-left: 24px;
+        }
+    }
+}
+
+.popup {
+    position: relative;
+    > span {
+        display: none;
+        position: absolute;
+        top: 32px;
+        right: 0;
+        padding: 12px;
+        width: 220px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+    }
+    &:hover > span {
+        display: block;
+    }
+}

@@ -1,0 +1,40 @@
+@use './new-main-mixins.module.scss' as *;
+@use './new-cards-mixins.module.scss' as *;
+@use './new-theme-mixins.module.scss' as *;
+
+@mixin pageBlockContainer($w: 1000px, $h: 500px) {
+	@include standartBluredBlock(15px);
+	overflow: hidden;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+	height: $h;
+	width: $w;
+	&::-webkit-scrollbar {
+		display: none;
+	}
+}
+
+@mixin pageBlockContentContainer {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	justify-content: space-between;
+	&__row {
+		display: flex;
+		justify-content: space-between;
+		gap: 5px;
+	}
+}
+
+@mixin pageBlockRow($w, $p: 10px, $h: 300px) {
+	border-radius: 25px;
+	width: $w;
+	flex-shrink: 0;
+	height: $h;
+	background-color: rgba(255, 255, 255, 0.313);
+	@include theme(black) {
+		background-color: transparent;
+		border: 1px solid rgba(255, 255, 255, 0.244);
+	}
+	padding: $p;
+}

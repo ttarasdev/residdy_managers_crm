@@ -1,0 +1,102 @@
+@mixin blackButton($width: 100px, $height: 30px, $bradius: 15px, $fsize: 14px) {
+	width: $width;
+	height: $height;
+	font-size: $fsize;
+	border-radius: $bradius;
+	color: white;
+	background-color: black;
+}
+
+@mixin whiteButtonWithBorder(
+	$width: 100px,
+	$height: 30px,
+	$bradius: 15px,
+	$fsize: 14px
+) {
+	width: $width;
+	height: $height;
+	font-size: $fsize;
+	border-radius: $bradius;
+	color: black;
+	border: 1px solid black;
+	background-color: white;
+}
+
+@mixin addButtonContainer {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 20px;
+	& button {
+		@include blackButton(200px, 40px, 20px, 18px);
+	}
+}
+
+@mixin deleteBlackWithIcon {
+	@include blackButton(40px, 40px, 8px, 15px);
+}
+
+@mixin togglePopular {
+	@include blackButton(40px, 40px, 8px, 15px);
+}
+
+@mixin plusBlackButton {
+	width: 40px;
+	height: 40px;
+	border-radius: 20px;
+	position: relative;
+	background-color: black;
+	&::after,
+	&::before {
+		position: absolute;
+		content: '';
+		width: 16px;
+		height: 2px;
+		background-color: white;
+		left: 12px;
+	}
+	&::after {
+		transform: rotate(90deg);
+	}
+}
+
+@mixin plusBlackButtonContainer {
+	display: flex;
+	justify-content: center;
+	padding: 10px;
+	& button {
+		@include plusBlackButton;
+	}
+}
+
+@mixin arrowButton {
+	width: 40px;
+	height: 40px;
+	border-radius: 20px;
+	background-color: black;
+	position: relative;
+	&::after,
+	&::before,
+	& span {
+		position: absolute;
+		content: '';
+		background-color: white;
+		height: 2px;
+		width: 10px;
+	}
+	&::after {
+		transform: rotate(45deg);
+		left: 12px;
+		bottom: 12px;
+	}
+	&::before {
+		right: 12px;
+		bottom: 12px;
+		transform: rotate(-45deg);
+	}
+	& span {
+		transform: rotate(90deg);
+		width: 20px;
+		left: 10px;
+		top: 18px;
+	}
+}

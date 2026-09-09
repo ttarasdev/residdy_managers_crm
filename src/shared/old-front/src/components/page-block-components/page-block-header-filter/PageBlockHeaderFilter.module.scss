@@ -1,0 +1,40 @@
+@use '../../../shared/styles/new-cards-mixins.module.scss' as *;
+@use '../../../shared/styles/new-theme-mixins.module.scss' as *;
+
+.filter {
+	position: relative;
+	width: 40px;
+	height: 40px;
+	&__button {
+		@include blockWithGrayBorder(40px, 40px, 0, 25px);
+	}
+	&__items {
+		position: absolute;
+		top: calc(100% + 5px);
+		right: 0;
+		width: 100px;
+		display: flex;
+		flex-direction: column;
+		gap: 3px;
+		opacity: 0;
+		transform: translateY(-8px);
+		pointer-events: none;
+		transition: opacity 200ms ease, transform 200ms ease;
+	}
+	&__item {
+		@include textBluredCard;
+		background: rgb(255, 255, 255);
+		cursor: pointer;
+		transition: transform 160ms ease, background 160ms ease,
+			border-color 160ms ease;
+		@include theme(black) {
+			background-color: black;
+		}
+	}
+}
+
+.filter.open .filter__items {
+	opacity: 1;
+	transform: translateY(0);
+	pointer-events: auto;
+}

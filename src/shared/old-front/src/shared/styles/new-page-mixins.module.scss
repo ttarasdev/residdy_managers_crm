@@ -1,0 +1,19 @@
+@use './new-main-mixins.module.scss' as *;
+
+@mixin pageContainer {
+	@include noScrollbar;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	overflow-y: auto;
+	gap: 5px;
+	> * {
+		flex: 0 0 auto;
+	}
+	&__row {
+		width: 1000px;
+		display: flex;
+		gap: 5px;
+	}
+}

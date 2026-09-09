@@ -1,0 +1,73 @@
+@use '../../../shared/styles/new-page-block-mixins.module.scss' as *;
+@use '../../../shared/styles/new-theme-mixins.module.scss' as *;
+@use '../../../shared/styles/new-item-page.module.scss' as *;
+
+.variants {
+	flex: 1;
+	display: flex;
+	align-content: flex-start;
+	position: relative;
+	flex-wrap: wrap;
+	gap: 5px;
+	border-radius: 15px;
+	padding: 5px;
+	@include theme('black') {
+		border: 1px solid rgba(255, 255, 255, 0.315);
+	}
+	&__item {
+		border: 1px solid rgba(212, 212, 212, 0.196);
+		position: relative;
+		width: 148px;
+		height: 114px;
+		border-radius: 10px;
+		overflow: hidden;
+		&.isPopular {
+			outline: 1px solid white;
+		}
+		@include theme('white') {
+			background: #020024;
+			background: linear-gradient(
+				90deg,
+				rgba(2, 0, 36, 1) 0%,
+				rgba(9, 9, 121, 1) 35%,
+				rgba(0, 212, 255, 1) 100%
+			);
+			border: none;
+		}
+	}
+	&__like {
+		position: absolute;
+		right: 8px;
+		bottom: 8px;
+		display: none;
+		&.isPopular {
+			display: block;
+		}
+	}
+	&__popup {
+		@include theme('black') {
+			background-color: #24272e;
+		}
+		@include theme('white') {
+			@include whiteBack;
+			backdrop-filter: blur(4px);
+			border: 1px solid rgba(0, 0, 0, 0.235);
+		}
+		position: absolute;
+		width: 100px;
+		right: calc(50% - 50px);
+		top: 50%;
+		border-radius: 10px;
+	}
+	&__button {
+		width: 100%;
+		padding: 9px;
+		border-radius: 10px;
+		&:hover {
+			background-color: rgb(241, 241, 241);
+			@include theme('black') {
+				background-color: black;
+			}
+		}
+	}
+}

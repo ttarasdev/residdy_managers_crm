@@ -1,0 +1,17 @@
+@use '../../../shared/styles/new-page-block-mixins.module.scss' as *;
+
+.block {
+	@include pageBlockContainer($w: 800px);
+	@include pageBlockContentContainer;
+	&__items {
+		width: 100%;
+		height: 350px;
+		border: 1px solid gray;
+		border-radius: 15px;
+		padding: 20px 10px;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 5px;
+		align-content: flex-start;
+	}
+}

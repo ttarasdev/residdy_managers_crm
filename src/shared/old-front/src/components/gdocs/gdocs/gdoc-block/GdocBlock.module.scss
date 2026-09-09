@@ -1,0 +1,25 @@
+@use '../../../../shared/styles/new-page-block-mixins.module.scss' as *;
+@use '../../../../shared/styles/new-item-page.module.scss' as *;
+
+.block {
+	@include pageBlockContainer($w: 695px, $h: 400px);
+	@include pageBlockContentContainer;
+	&__info {
+		@include whiteBack;
+		@include ItemPageItemsBlock($h: 250px);
+		padding: 10px;
+	}
+	&__vars {
+		display: flex;
+		gap: 10px;
+		flex-wrap: wrap;
+		& span {
+			padding: 5px;
+			border-radius: 5px;
+			@include whiteBack;
+		}
+	}
+	&__label {
+		margin: 5px 0;
+	}
+}

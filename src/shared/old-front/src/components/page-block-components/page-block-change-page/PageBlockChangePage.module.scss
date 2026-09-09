@@ -1,0 +1,16 @@
+@use '../../../shared/styles/new-cards-mixins.module.scss' as *;
+
+.buttons {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 20px;
+	&__left,
+	&__right {
+		@include blockWithGrayBorder(40px, 40px, 0, 20px);
+	}
+	&__left {
+		transform: rotate(180deg);
+	}
+}

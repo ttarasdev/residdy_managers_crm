@@ -1,0 +1,26 @@
+@use '../../../shared/styles/new-item-page.module.scss' as *;
+
+.aud {
+	@include whiteBack;
+	border-radius: 15px;
+	padding: 15px;
+	width: 313px;
+	height: 145px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	&__item {
+		display: flex;
+		gap: 20px;
+		height: 25px;
+	}
+	&__title {
+		width: 150px;
+	}
+	&__value {
+		display: inline-block;
+		@include whiteBack;
+		padding: 3px;
+		border-radius: 5px;
+	}
+}

@@ -1,0 +1,13 @@
+@use '../../../shared/styles/new-page-block-mixins.module.scss' as *;
+@use '../../../shared/styles/new-cards-mixins.module.scss' as *;
+@use '../../../shared/styles/new-main-mixins.module.scss' as *;
+
+.block {
+	@include pageBlockContainer($w: 795px);
+	@include pageBlockContentContainer;
+	&__row {
+		@include textBluredCard(100%, 300px, 10px);
+		@include noScrollbar;
+		overflow-y: scroll;
+	}
+}

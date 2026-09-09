@@ -1,0 +1,6 @@
+@use '../../../../shared/styles/new-page-block-mixins.module.scss' as *;
+
+.block {
+	@include pageBlockContainer($w: 500px);
+	@include pageBlockContentContainer;
+}

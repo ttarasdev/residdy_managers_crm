@@ -1,0 +1,151 @@
+@use './new-modals-mixins.module.scss' as *;
+@use './new-image-mixins.module.scss' as *;
+@use './new-theme-mixins.module.scss' as *;
+@use './new-main-mixins.module.scss' as *;
+
+@mixin form {
+	@include modal;
+	&__container {
+		@include modalContainer;
+	}
+	&__error {
+		color: rgb(136, 17, 17);
+	}
+}
+
+@mixin formLabel {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+@mixin formImagesBlock {
+	height: 220px;
+	padding: 5px;
+	display: flex;
+	gap: 5px;
+	flex-wrap: wrap;
+	align-items: center;
+	border-radius: 10px;
+	align-content: flex-start;
+	@include theme('black') {
+		background: rgba(37, 37, 39, 1);
+		border: 1px solid rgba(255, 255, 255, 0.08);
+	}
+	&__container {
+		@include formLabel;
+		border-radius: 8px;
+		font-size: 14px;
+		background-color: transparent;
+		transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+	}
+}
+
+@mixin formImagesBlockItem($w: 47.5px, $h: 47.5px, $b: black) {
+	cursor: pointer;
+	width: $w;
+	height: $h;
+	border-radius: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: $b;
+	overflow: hidden;
+	border: 1px solid rgba(212, 212, 212, 0.408);
+	@include theme('black') {
+		background-color: transparent;
+	}
+	&.active {
+		background: radial-gradient(
+			120% 140% at 85% 20%,
+			rgba(25, 56, 130, 0.504) 0%,
+			rgba(24, 50, 128, 0.757) 55%
+		);
+		border: 1px solid rgba(60, 120, 255, 0.45);
+	}
+}
+
+@mixin formImagesBlockImage($w: 30px, $h: 30px, $br: 10px) {
+	@include imageCardContainer($width: $w, $height: $h, $bradius: $br);
+}
+
+@mixin formInfoListBlock {
+	padding: 5px;
+	display: flex;
+	flex-direction: column;
+	position: relative;
+	gap: 5px;
+	border-radius: 10px;
+	height: 270px;
+	overflow-y: auto;
+	@include noScrollbar;
+	@include theme('black') {
+		background: rgba(37, 37, 39, 1);
+		border: 1px solid rgba(255, 255, 255, 0.08);
+	}
+	&__container {
+		@include formLabel;
+		border-radius: 8px;
+		font-size: 14px;
+		background-color: transparent;
+		transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+	}
+	&__popup {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		left: 0;
+		top: 0;
+		background: radial-gradient(
+			120% 140% at 85% 20%,
+			rgba(25, 56, 130, 0.504) 0%,
+			rgba(24, 50, 128, 0.757) 55%
+		);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+}
+
+@mixin formInfoListBlockItem {
+	color: white;
+	cursor: pointer;
+	flex-shrink: 0;
+	height: 50px;
+	padding: 5px;
+	border-radius: 10px;
+	display: flex;
+	align-items: center;
+	background-color: black;
+	border: 1px solid rgba(212, 212, 212, 0.408);
+	@include theme('black') {
+		background-color: transparent;
+	}
+	&__image {
+		@include imageCardContainer(
+			$width: 30px,
+			$height: 30px,
+			$bradius: 10px
+		);
+		margin-right: 10px;
+	}
+	&__title {
+		margin-bottom: 5px;
+	}
+	&__subtitle {
+		font-weight: 200;
+		font-size: 13px;
+	}
+	&.active {
+		background: radial-gradient(
+			120% 140% at 85% 20%,
+			rgba(25, 56, 130, 0.504) 0%,
+			rgba(24, 50, 128, 0.757) 55%
+		);
+		border: 1px solid rgba(38, 59, 108, 0.45);
+	}
+	&__error {
+		color: red;
+		padding: 5px;
+	}
+}

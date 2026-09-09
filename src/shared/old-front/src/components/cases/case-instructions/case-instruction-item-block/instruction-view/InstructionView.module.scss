@@ -1,0 +1,64 @@
+@use '../../../../../shared/styles/new-modals-mixins.module.scss' as *;
+@use '../../../../../shared/styles/new-main-mixins.module.scss' as *;
+@use '../../../../../shared/styles/new-theme-mixins.module.scss' as *;
+
+.block {
+	@include noScrollbar;
+	@include standartBluredBlock;
+	overflow-y: auto;
+	width: 500px;
+	padding: 5px;
+	max-height: calc(100vh - 20px);
+
+	&__container {
+		@include modalContainer;
+	}
+	&__header {
+		position: fixed;
+		width: 100%;
+		top: 0;
+		left: 0;
+		z-index: 100;
+		height: 50px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 0 20px;
+		background-color: rgba(255, 255, 255, 0.659);
+		@include theme('black') {
+			background-color: rgba(0, 0, 0, 0.612);
+		}
+	}
+	&__close {
+		width: 30px;
+		height: 30px;
+		border-radius: 15px;
+		border: 1px solid rgba(255, 255, 255, 0.539);
+		@include theme('white') {
+			border: 1px solid rgba(0, 0, 0, 0.773);
+		}
+	}
+	&__top {
+		position: relative;
+		width: 490px;
+		height: 300px;
+	}
+	&__title {
+		position: absolute;
+	}
+	&__items {
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+	}
+	&__item {
+		min-height: 300px;
+	}
+	&__image {
+		border-radius: 10px;
+		overflow: hidden;
+		position: relative;
+		width: 100%;
+		height: 300px;
+	}
+}

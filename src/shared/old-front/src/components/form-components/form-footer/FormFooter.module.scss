@@ -1,0 +1,14 @@
+@use '../../../shared/styles/new-buttons-mixins.module.scss' as *;
+@use '../../../shared/styles/new-theme-mixins.module.scss' as *;
+
+.buttons {
+	display: flex;
+	justify-content: flex-end;
+	gap: 5px;
+	&__submit {
+		@include blackWhiteButton;
+	}
+	&__cancel {
+		@include borderButton;
+	}
+}

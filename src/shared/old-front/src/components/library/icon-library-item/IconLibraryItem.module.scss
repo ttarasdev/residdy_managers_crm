@@ -1,0 +1,31 @@
+.item {
+	position: relative;
+	width: 70px;
+	height: 70px;
+	border-radius: 10px;
+	&.active {
+		border: 1px solid white;
+	}
+	&__popup {
+		position: absolute;
+		left: -5px;
+		top: -5px;
+		border-radius: 10px;
+		background-color: black;
+		width: 80px;
+		height: 80px;
+		padding: 5px;
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+	}
+	&__button {
+		border-radius: 7px;
+		display: block;
+		height: 20px;
+		width: 100%;
+		&:hover {
+			background-color: gray;
+		}
+	}
+}

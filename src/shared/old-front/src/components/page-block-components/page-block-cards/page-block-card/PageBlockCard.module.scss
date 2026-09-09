@@ -1,0 +1,115 @@
+@use '../../../../shared/styles/new-image-mixins.module.scss' as *;
+@use '../../../../shared/styles/new-theme-mixins.module.scss' as *;
+@use '../../../../shared/styles/new-custom-backs.module.scss' as *;
+@use '../../../../shared/styles/new-item-page.module.scss' as *;
+
+.card {
+	width: 313px;
+	height: 200px;
+	border-radius: 15px;
+	padding: 10px;
+	position: relative;
+	@include whiteBack;
+	backdrop-filter: blur(4px);
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	@include whiteBack;
+	&__top {
+		display: flex;
+		gap: 10px;
+		height: 100px;
+	}
+	&__icon {
+		@include iconBack;
+		@include imageCardContainer(80px, 80px, 40px);
+	}
+	&__variant {
+		@include imageCardContainer(80px, 80px, 40px);
+	}
+	&__mainInfo {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		gap: 10px;
+		flex: 1;
+		height: 100%;
+	}
+	&__title {
+		font-size: 18px;
+	}
+	&__subtitle {
+		opacity: 0.6;
+		font-weight: 200;
+	}
+	&__infoBlock {
+		width: fit-content;
+		padding: 8px;
+		border-radius: 10px;
+		border: 1px solid rgba(255, 255, 255, 0.157);
+	}
+	&__settings {
+		padding: 5px;
+		position: absolute;
+		right: 0;
+		top: 0;
+	}
+	&__info {
+		padding: 10px;
+		border-top: 1px solid rgba(255, 255, 255, 0.252);
+		border-bottom: 1px solid rgba(255, 255, 255, 0.228);
+	}
+	&__statuses {
+		display: flex;
+		justify-content: space-between;
+		padding: 5px;
+	}
+	&__leftStatus,
+	&__rightStatus {
+		display: flex;
+		gap: 10px;
+		padding: 5px 10px;
+		border-radius: 15px;
+		height: 30px;
+		align-items: center;
+	}
+	&__leftStatus {
+		background-color: #f5e8d2;
+		& span {
+			color: #b07b1c;
+		}
+	}
+	&__rightStatus {
+		background-color: #dbe4e6;
+		& span {
+			color: #1b3735;
+		}
+	}
+	&__popup {
+		@include theme('black') {
+			background-color: #24272e;
+		}
+		@include theme('white') {
+			@include whiteBack;
+			backdrop-filter: blur(4px);
+			border: 1px solid rgba(0, 0, 0, 0.235);
+		}
+		position: absolute;
+		width: 100px;
+		right: 40px;
+		top: 5px;
+		border-radius: 10px;
+	}
+	&__button {
+		width: 100%;
+		padding: 9px;
+		border-radius: 10px;
+		&:hover {
+			background-color: rgb(241, 241, 241);
+			@include theme('black') {
+				background-color: black;
+			}
+		}
+	}
+}

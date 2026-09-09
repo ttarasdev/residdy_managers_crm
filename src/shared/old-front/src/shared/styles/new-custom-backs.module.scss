@@ -1,0 +1,99 @@
+@mixin iconBack {
+	background: #020024;
+	background: linear-gradient(
+		90deg,
+		rgba(2, 0, 36, 1) 0%,
+		rgba(9, 9, 121, 1) 35%,
+		rgba(0, 212, 255, 1) 100%
+	);
+}
+
+@mixin bgStyle1 {
+	background: radial-gradient(
+		circle at 35% 45%,
+		rgba(8, 10, 18, 1) 12%,
+		rgba(28, 42, 110, 1) 78%,
+		rgba(70, 95, 160, 1) 99%
+	);
+}
+
+@mixin bgStyle2 {
+	background: radial-gradient(
+		circle at 60% 40%,
+		rgba(10, 8, 18, 1) 12%,
+		rgba(70, 35, 120, 1) 78%,
+		rgba(120, 85, 170, 1) 99%
+	);
+}
+
+@mixin bgStyle3 {
+	background: radial-gradient(
+		circle at 45% 60%,
+		rgba(8, 14, 14, 1) 12%,
+		rgba(0, 95, 95, 1) 78%,
+		rgba(60, 140, 135, 1) 99%
+	);
+}
+
+@mixin bgStyle4 {
+	background: radial-gradient(
+		circle at 55% 55%,
+		rgba(8, 12, 20, 1) 12%,
+		rgba(0, 75, 140, 1) 78%,
+		rgba(55, 130, 170, 1) 99%
+	);
+}
+
+@mixin bgStyle5 {
+	background: radial-gradient(
+		circle at 40% 35%,
+		rgba(12, 8, 18, 1) 12%,
+		rgba(55, 40, 120, 1) 78%,
+		rgba(100, 85, 150, 1) 99%
+	);
+}
+
+@mixin bgStyle6 {
+	background: radial-gradient(
+		circle at 65% 60%,
+		rgba(8, 10, 18, 1) 12%,
+		rgba(25, 80, 140, 1) 78%,
+		rgba(70, 125, 170, 1) 99%
+	);
+}
+
+@mixin bgStyle7 {
+	background: radial-gradient(
+		circle at 30% 60%,
+		rgba(10, 8, 18, 1) 12%,
+		rgba(85, 45, 125, 1) 78%,
+		rgba(140, 95, 165, 1) 99%
+	);
+}
+
+@mixin bgStyle8 {
+	background: radial-gradient(
+		circle at 70% 40%,
+		rgba(8, 12, 20, 1) 12%,
+		rgba(20, 95, 150, 1) 78%,
+		rgba(70, 150, 185, 1) 99%
+	);
+}
+
+@mixin bgStyle9 {
+	background: radial-gradient(
+		circle at 40% 70%,
+		rgba(8, 12, 20, 1) 12%,
+		rgba(45, 55, 130, 1) 78%,
+		rgba(95, 110, 160, 1) 99%
+	);
+}
+
+@mixin bgStyle10 {
+	background: radial-gradient(
+		circle at 55% 35%,
+		rgba(8, 14, 16, 1) 12%,
+		rgba(0, 105, 95, 1) 78%,
+		rgba(60, 150, 135, 1) 99%
+	);
+}

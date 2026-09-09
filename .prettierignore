@@ -1,0 +1,8 @@
+node_modules
+.next
+package-lock.json
+next-env.d.ts
+src/shared/old-front
+src/shared/new-back
+
+src/shared/new-back-2

@@ -1,0 +1,65 @@
+@use '../../../shared/styles/new-page-block-mixins.module.scss' as *;
+@use '../../../shared/styles/new-custom-backs.module.scss' as *;
+@use '../../../shared/styles/new-theme-mixins.module.scss' as *;
+
+.tip {
+	@include pageBlockContainer($w: 200px, $h: calc(33% - 2px));
+	@include pageBlockContentContainer;
+	@include theme('black') {
+		border: none;
+	}
+	&__title {
+		font-size: 16px;
+		font-weight: 500;
+	}
+	&__text {
+		font-weight: 300;
+	}
+	&__footer {
+		display: flex;
+		justify-content: space-between;
+	}
+	&__no,
+	&__arrow {
+		width: 30px;
+		height: 30px;
+		border-radius: 15px;
+		font-weight: 300;
+		background-color: rgba(128, 128, 128, 0.186);
+		font-size: 16px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+}
+
+.bg1 {
+	@include bgStyle1;
+}
+.bg2 {
+	@include bgStyle2;
+}
+.bg3 {
+	@include bgStyle3;
+}
+.bg4 {
+	@include bgStyle4;
+}
+.bg5 {
+	@include bgStyle5;
+}
+.bg6 {
+	@include bgStyle6;
+}
+.bg7 {
+	@include bgStyle7;
+}
+.bg8 {
+	@include bgStyle8;
+}
+.bg9 {
+	@include bgStyle9;
+}
+.bg10 {
+	@include bgStyle10;
+}

@@ -1,0 +1,11 @@
+.img {
+	background: #1662b8;
+	background: linear-gradient(
+		90deg,
+		rgba(22, 98, 184, 1) 0%,
+		rgba(9, 9, 121, 1) 35%,
+		rgba(6, 85, 171, 1) 69%,
+		rgba(0, 212, 255, 1) 100%
+	);
+	object-fit: cover;
+}

@@ -1,0 +1,45 @@
+@use '../../../shared/styles/new-theme-mixins.module.scss' as *;
+@use '../../../shared/styles/new-main-mixins.module.scss' as *;
+@use '../../../shared/styles/new-animations-block-mixins.module.scss' as *;
+
+.auth {
+	width: 380px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+	&__container {
+		height: 100vh;
+		width: 100vw;
+		display: flex;
+		flex-direction: column;
+		gap: 30px;
+		align-items: center;
+		justify-content: center;
+		align-items: center;
+	}
+	&__error {
+		color: red;
+	}
+}
+
+.theme {
+	display: flex;
+	gap: 10px;
+	&__button {
+		width: 40px;
+		height: 40px;
+		border-radius: 20px;
+		display: flex;
+		flex: 0 0 40px;
+		justify-content: center;
+		align-items: center;
+		@include bluredBackground;
+		&.moon {
+			background-color: black;
+		}
+		&.current {
+			@include gradientBorder(25px);
+		}
+	}
+}

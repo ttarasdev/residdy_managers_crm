@@ -1,0 +1,27 @@
+@use './new-theme-mixins.module.scss' as *;
+@use './new-main-mixins.module.scss' as *;
+
+@mixin whiteBack {
+	background-color: rgba(255, 255, 255, 0.679);
+	@include theme('black') {
+		background-color: rgba(255, 255, 255, 0.145);
+		border: 1px solid rgba(255, 255, 255, 0.341);
+	}
+}
+
+@mixin ItemPageItemsBlock($w: 100%, $h: 320px) {
+	width: 100%;
+	height: $h;
+	border: 1px solid rgba(255, 255, 255, 0.273);
+	border-radius: 25px;
+	overflow: hidden;
+	&__items {
+		height: calc(100% - 50px);
+		padding: 10px;
+		@include noScrollbar;
+		overflow-y: auto;
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+	}
+}

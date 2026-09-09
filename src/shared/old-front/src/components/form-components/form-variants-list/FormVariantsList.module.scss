@@ -1,0 +1,12 @@
+@use '../../../shared/styles/new-form-mixins.module.scss' as *;
+
+.items {
+	@include formImagesBlock;
+	&__item {
+		@include formImagesBlockItem(120px, 65px, 'none');
+	}
+	&__image {
+		@include formImagesBlockImage(120px, 65px, 10px);
+		position: relative;
+	}
+}

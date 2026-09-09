@@ -1,0 +1,9 @@
+@use '../../../shared/styles/new-form-mixins.module.scss' as *;
+
+.items {
+	@include formInfoListBlock;
+}
+
+.item {
+	@include formInfoListBlockItem;
+}
