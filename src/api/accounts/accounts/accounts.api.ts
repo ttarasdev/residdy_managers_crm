@@ -1,11 +1,25 @@
 import type { PageResponse } from '../../common.types'
 import type { RequestOptions } from '../../http.types'
 import type { Account, AccountsQuery, UpdateAccountDto } from './accounts.types'
-import { http } from '../../http'
+import { http, toFormData } from '../../http'
 
 const BASE = '/account'
 
 export const accountsApi = {
+    /** POST /account/me/avatar */
+    uploadMyAvatar: (file: File, options?: RequestOptions) =>
+        http.post<Account>(`${BASE}/me/avatar`, toFormData({}, file), {
+            ...options,
+        }),
+
+    /** POST /account/:id/avatar — roles: admin (or the account owner) */
+    uploadAvatar: (id: number, file: File, options?: RequestOptions) =>
+        http.post<Account>(
+            `${BASE}/${encodeURIComponent(String(id))}/avatar`,
+            toFormData({}, file),
+            { ...options },
+        ),
+
     /** GET /account/me */
     getMe: (options?: RequestOptions) =>
         http.get<Account>(`${BASE}/me`, { ...options }),

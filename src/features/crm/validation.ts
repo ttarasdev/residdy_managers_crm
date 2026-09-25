@@ -7,6 +7,35 @@ export function validateAction(
     operation: Operation,
     values: Record<string, unknown>,
 ) {
+    if (operation.resource === 'app-announcements' && isRecord(values.dto)) {
+        const dto = values.dto
+
+        const start = Date.parse(String(dto.startsAt)),
+            end = Date.parse(String(dto.endsAt))
+
+        if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start)
+            throw new Error('Koniec musi być późniejszy niż początek.')
+
+        const required =
+            dto.actionType === 'external_url'
+                ? ['actionUrl']
+                : dto.actionType === 'screen'
+                  ? ['actionScreen']
+                  : dto.actionType === 'record'
+                    ? ['actionRecordType', 'actionRecordId']
+                    : []
+
+        for (const key of required)
+            if (!dto[key]) throw new Error(`Uzupełnij pole: ${label(key)}`)
+
+        if (dto.actionType === 'external_url') {
+            const url = new URL(String(dto.actionUrl))
+
+            if (url.protocol !== 'https:' || url.username || url.password)
+                throw new Error('Podaj adres HTTPS bez danych logowania.')
+        }
+    }
+
     for (const field of operation.args)
         validateField(field, values[field.name], operation.resource)
 }

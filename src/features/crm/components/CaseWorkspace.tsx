@@ -264,7 +264,10 @@ function OrderedCollection({
                             </details>
                         ) : (
                             <div className={c.itemDetails}>
-                                <RecordDetails value={row} />
+                                <RecordDetails
+                                    value={row}
+                                    resource={resource}
+                                />
                             </div>
                         )}
                     </div>

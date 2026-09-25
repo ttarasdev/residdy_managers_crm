@@ -103,3 +103,11 @@ export { legalDocumentsApi } from './legal/legal-documents/legal-documents.api'
 export { legalDocumentVersionsApi } from './legal/legal-document-versions/legal-document-versions.api'
 
 export { paymentLedgerApi } from './payments/payment-ledger/payment-ledger.api'
+
+export * from './app-announcements/app-announcements.api'
+
+export * from './app-announcements/app-announcements.types'
+
+export * from './mail/mail-signatures/mail-signatures.api'
+
+export * from './mail/mail-signatures/mail-signatures.types'

@@ -48,3 +48,10 @@ export interface UpdateCompanyStatusDto {
 }
 
 export type { PrivateVariant } from '../../media/private-variants/private-variants.types'
+
+export interface CreateManagedPartnerCompanyDto {
+    partnerId: number
+    companyName: string
+    contactEmail?: string
+    phone?: string
+}

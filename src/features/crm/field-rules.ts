@@ -12,6 +12,38 @@ export interface FieldRules {
 }
 
 const rules: Record<string, Record<string, FieldRules>> = {
+    'partner-companies': {
+        companyName: { minLength: 1, maxLength: 255 },
+        file: {
+            accept: '.jpg,.jpeg,.png,.webp',
+            maxFileSize: 20 * 1024 * 1024,
+            hint: 'Logo: proporcje 1:1, zalecane 800 × 800 px. PNG z przezroczystym tłem, JPEG lub WebP; do 20 MB.',
+        },
+    },
+    'partner-company-info': {
+        file: {
+            accept: '.jpg,.jpeg,.png,.webp',
+            maxFileSize: 20 * 1024 * 1024,
+            hint: 'Zdjęcie główne: zalecane poziome 4:3, np. 1600 × 1200 px. JPEG, PNG lub WebP, do 20 MB.',
+        },
+    },
+    'app-announcements': {
+        intervalMinutes: { min: 1, max: 43200, step: 1, hint: 'Np. 10 = co 10 minut. Domyślnie 1440 (24 godziny). Czas liczony od wyświetlenia, osobno dla konta na urządzeniu.' },
+        title: {
+            minLength: 1,
+            maxLength: 150,
+            hint: 'Nazwa wewnętrzna, niewidoczna w aplikacji.',
+        },
+        file: {
+            accept: '.jpg,.jpeg,.png,.webp',
+            maxFileSize: 5 * 1024 * 1024,
+            hint: 'Zalecany pionowy obraz 3:4, np. 1200 × 1600 px. Cały obraz jest widoczny bez przycinania. JPEG, PNG lub WebP, do 5 MB i 16 megapikseli.',
+        },
+        actionUrl: { maxLength: 2048, hint: 'Pełny adres HTTPS.' },
+        endsAt: {
+            hint: 'Koniec wyłączny. Okresy włączonych reklam nie mogą się nakładać.',
+        },
+    },
     'subscription-plans': {
         code: {
             pattern: '[a-z][a-z0-9_-]{1,39}',

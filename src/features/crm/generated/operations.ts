@@ -2,6 +2,7 @@ import type { Operation } from '../types'
 import { accountAuthApi } from '../../../api/accounts/account-auth/account-auth.api'
 import { accountsApi } from '../../../api/accounts/accounts/accounts.api'
 import { analyticsApi } from '../../../api/analytics/analytics.api'
+import { appAnnouncementsApi } from '../../../api/app-announcements/app-announcements.api'
 import { blogCategoriesApi } from '../../../api/blog/blog-categories/blog-categories.api'
 import { blogPostsApi } from '../../../api/blog/blog-posts/blog-posts.api'
 import { caseInstructionBlocksApi } from '../../../api/cases/case-instruction-blocks/case-instruction-blocks.api'
@@ -23,6 +24,7 @@ import { legalDocumentsApi } from '../../../api/legal/legal-documents/legal-docu
 import { mailAccountsApi } from '../../../api/mail/mail-accounts/mail-accounts.api'
 import { mailJobsApi } from '../../../api/mail/mail-jobs/mail-jobs.api'
 import { mailQueueApi } from '../../../api/mail/mail-queue/mail-queue.api'
+import { mailSignaturesApi } from '../../../api/mail/mail-signatures/mail-signatures.api'
 import { mailSnippetsApi } from '../../../api/mail/mail-snippets/mail-snippets.api'
 import { mailApi } from '../../../api/mail/mail/mail.api'
 import { managersApi } from '../../../api/managers/managers/managers.api'
@@ -378,6 +380,57 @@ export const operations: readonly Operation[] = [
         execute: (args, options) =>
             accountAuthApi.resetPassword(
                 args[0] as Parameters<typeof accountAuthApi.resetPassword>[0],
+                options,
+            ),
+    },
+    {
+        ...{
+            id: 'accounts.uploadMyAvatar',
+            resource: 'accounts',
+            method: 'uploadMyAvatar',
+            verb: 'POST',
+            roles: [],
+            args: [
+                {
+                    name: 'file',
+                    optional: false,
+                    nullable: false,
+                    kind: 'file',
+                },
+            ],
+        },
+        execute: (args, options) =>
+            accountsApi.uploadMyAvatar(
+                args[0] as Parameters<typeof accountsApi.uploadMyAvatar>[0],
+                options,
+            ),
+    },
+    {
+        ...{
+            id: 'accounts.uploadAvatar',
+            resource: 'accounts',
+            method: 'uploadAvatar',
+            verb: 'POST',
+            roles: ['admin'],
+            args: [
+                {
+                    name: 'id',
+                    optional: false,
+                    nullable: false,
+                    kind: 'number',
+                },
+                {
+                    name: 'file',
+                    optional: false,
+                    nullable: false,
+                    kind: 'file',
+                },
+            ],
+        },
+        execute: (args, options) =>
+            accountsApi.uploadAvatar(
+                args[0] as Parameters<typeof accountsApi.uploadAvatar>[0],
+                args[1] as Parameters<typeof accountsApi.uploadAvatar>[1],
                 options,
             ),
     },
@@ -855,6 +908,387 @@ export const operations: readonly Operation[] = [
         execute: (args, options) =>
             analyticsApi.revenue(
                 args[0] as Parameters<typeof analyticsApi.revenue>[0],
+                options,
+            ),
+    },
+    {
+        ...{
+            id: 'app-announcements.list',
+            resource: 'app-announcements',
+            method: 'list',
+            verb: 'GET',
+            roles: ['writer'],
+            args: [
+                {
+                    name: 'query',
+                    optional: true,
+                    nullable: false,
+                    kind: 'object',
+                    fields: [
+                        {
+                            name: 'page',
+                            optional: true,
+                            nullable: false,
+                            kind: 'number',
+                        },
+                        {
+                            name: 'limit',
+                            optional: true,
+                            nullable: false,
+                            kind: 'number',
+                        },
+                        {
+                            name: 'offset',
+                            optional: true,
+                            nullable: false,
+                            kind: 'number',
+                        },
+                        {
+                            name: 'enabled',
+                            kind: 'boolean',
+                            optional: true,
+                            nullable: false,
+                        },
+                    ],
+                },
+            ],
+        },
+        execute: (args, options) =>
+            appAnnouncementsApi.list(
+                args[0] as Parameters<typeof appAnnouncementsApi.list>[0],
+                options,
+            ),
+    },
+    {
+        ...{
+            id: 'app-announcements.getById',
+            resource: 'app-announcements',
+            method: 'getById',
+            verb: 'GET',
+            roles: ['writer'],
+            args: [
+                {
+                    name: 'id',
+                    optional: false,
+                    nullable: false,
+                    kind: 'number',
+                },
+            ],
+        },
+        execute: (args, options) =>
+            appAnnouncementsApi.getById(
+                args[0] as Parameters<typeof appAnnouncementsApi.getById>[0],
+                options,
+            ),
+    },
+    {
+        ...{
+            id: 'app-announcements.create',
+            resource: 'app-announcements',
+            method: 'create',
+            verb: 'POST',
+            roles: ['writer'],
+            args: [
+                {
+                    name: 'dto',
+                    optional: false,
+                    nullable: false,
+                    kind: 'object',
+                    fields: [
+                        {
+                            name: 'intervalMinutes',
+                            optional: true,
+                            nullable: false,
+                            kind: 'number',
+                        },
+                        {
+                            name: 'title',
+                            optional: false,
+                            nullable: false,
+                            kind: 'string',
+                        },
+                        {
+                            name: 'startsAt',
+                            optional: false,
+                            nullable: false,
+                            kind: 'string',
+                        },
+                        {
+                            name: 'endsAt',
+                            optional: false,
+                            nullable: false,
+                            kind: 'string',
+                        },
+                        {
+                            name: 'enabled',
+                            kind: 'boolean',
+                            optional: false,
+                            nullable: false,
+                        },
+                        {
+                            name: 'imagePlId',
+                            optional: false,
+                            nullable: false,
+                            kind: 'number',
+                        },
+                        {
+                            name: 'imageUaId',
+                            optional: false,
+                            nullable: false,
+                            kind: 'number',
+                        },
+                        {
+                            name: 'imageEnId',
+                            optional: false,
+                            nullable: false,
+                            kind: 'number',
+                        },
+                        {
+                            name: 'imageRuId',
+                            optional: false,
+                            nullable: false,
+                            kind: 'number',
+                        },
+                        {
+                            name: 'actionType',
+                            kind: 'enum',
+                            optional: false,
+                            nullable: false,
+                            choices: [
+                                'none',
+                                'external_url',
+                                'screen',
+                                'record',
+                            ],
+                        },
+                        {
+                            name: 'actionUrl',
+                            optional: true,
+                            nullable: false,
+                            kind: 'string',
+                        },
+                        {
+                            name: 'actionScreen',
+                            kind: 'enum',
+                            optional: true,
+                            nullable: false,
+                            choices: [
+                                'home',
+                                'subscription_plans',
+                                'consultations',
+                                'blog',
+                                'legalization',
+                                'partners',
+                                'documents',
+                            ],
+                        },
+                        {
+                            name: 'actionRecordType',
+                            kind: 'enum',
+                            optional: true,
+                            nullable: false,
+                            choices: [
+                                'case',
+                                'blog_post',
+                                'consultation',
+                                'partner_company',
+                            ],
+                        },
+                        {
+                            name: 'actionRecordId',
+                            optional: true,
+                            nullable: false,
+                            kind: 'number',
+                        },
+                    ],
+                },
+            ],
+        },
+        execute: (args, options) =>
+            appAnnouncementsApi.create(
+                args[0] as Parameters<typeof appAnnouncementsApi.create>[0],
+                options,
+            ),
+    },
+    {
+        ...{
+            id: 'app-announcements.update',
+            resource: 'app-announcements',
+            method: 'update',
+            verb: 'PUT',
+            roles: ['writer'],
+            args: [
+                {
+                    name: 'id',
+                    optional: false,
+                    nullable: false,
+                    kind: 'number',
+                },
+                {
+                    name: 'dto',
+                    optional: false,
+                    nullable: false,
+                    kind: 'object',
+                    fields: [
+                        {
+                            name: 'intervalMinutes',
+                            optional: true,
+                            nullable: false,
+                            kind: 'number',
+                        },
+                        {
+                            name: 'title',
+                            optional: false,
+                            nullable: false,
+                            kind: 'string',
+                        },
+                        {
+                            name: 'startsAt',
+                            optional: false,
+                            nullable: false,
+                            kind: 'string',
+                        },
+                        {
+                            name: 'endsAt',
+                            optional: false,
+                            nullable: false,
+                            kind: 'string',
+                        },
+                        {
+                            name: 'enabled',
+                            kind: 'boolean',
+                            optional: false,
+                            nullable: false,
+                        },
+                        {
+                            name: 'imagePlId',
+                            optional: false,
+                            nullable: false,
+                            kind: 'number',
+                        },
+                        {
+                            name: 'imageUaId',
+                            optional: false,
+                            nullable: false,
+                            kind: 'number',
+                        },
+                        {
+                            name: 'imageEnId',
+                            optional: false,
+                            nullable: false,
+                            kind: 'number',
+                        },
+                        {
+                            name: 'imageRuId',
+                            optional: false,
+                            nullable: false,
+                            kind: 'number',
+                        },
+                        {
+                            name: 'actionType',
+                            kind: 'enum',
+                            optional: false,
+                            nullable: false,
+                            choices: [
+                                'none',
+                                'external_url',
+                                'screen',
+                                'record',
+                            ],
+                        },
+                        {
+                            name: 'actionUrl',
+                            optional: true,
+                            nullable: false,
+                            kind: 'string',
+                        },
+                        {
+                            name: 'actionScreen',
+                            kind: 'enum',
+                            optional: true,
+                            nullable: false,
+                            choices: [
+                                'home',
+                                'subscription_plans',
+                                'consultations',
+                                'blog',
+                                'legalization',
+                                'partners',
+                                'documents',
+                            ],
+                        },
+                        {
+                            name: 'actionRecordType',
+                            kind: 'enum',
+                            optional: true,
+                            nullable: false,
+                            choices: [
+                                'case',
+                                'blog_post',
+                                'consultation',
+                                'partner_company',
+                            ],
+                        },
+                        {
+                            name: 'actionRecordId',
+                            optional: true,
+                            nullable: false,
+                            kind: 'number',
+                        },
+                    ],
+                },
+            ],
+        },
+        execute: (args, options) =>
+            appAnnouncementsApi.update(
+                args[0] as Parameters<typeof appAnnouncementsApi.update>[0],
+                args[1] as Parameters<typeof appAnnouncementsApi.update>[1],
+                options,
+            ),
+    },
+    {
+        ...{
+            id: 'app-announcements.remove',
+            resource: 'app-announcements',
+            method: 'remove',
+            verb: 'DELETE',
+            roles: ['writer'],
+            args: [
+                {
+                    name: 'id',
+                    optional: false,
+                    nullable: false,
+                    kind: 'number',
+                },
+            ],
+        },
+        execute: (args, options) =>
+            appAnnouncementsApi.remove(
+                args[0] as Parameters<typeof appAnnouncementsApi.remove>[0],
+                options,
+            ),
+    },
+    {
+        ...{
+            id: 'app-announcements.uploadImage',
+            resource: 'app-announcements',
+            method: 'uploadImage',
+            verb: 'POST',
+            roles: ['writer'],
+            args: [
+                {
+                    name: 'file',
+                    optional: false,
+                    nullable: false,
+                    kind: 'file',
+                },
+            ],
+        },
+        execute: (args, options) =>
+            appAnnouncementsApi.uploadImage(
+                args[0] as Parameters<
+                    typeof appAnnouncementsApi.uploadImage
+                >[0],
                 options,
             ),
     },
@@ -1494,13 +1928,13 @@ export const operations: readonly Operation[] = [
                         {
                             name: 'variantId',
                             optional: true,
-                            nullable: false,
+                            nullable: true,
                             kind: 'number',
                         },
                         {
                             name: 'contentJson',
                             optional: true,
-                            nullable: false,
+                            nullable: true,
                             kind: 'json',
                         },
                     ],
@@ -1598,13 +2032,13 @@ export const operations: readonly Operation[] = [
                         {
                             name: 'contentJson',
                             optional: true,
-                            nullable: false,
+                            nullable: true,
                             kind: 'json',
                         },
                         {
                             name: 'variantId',
                             optional: true,
-                            nullable: false,
+                            nullable: true,
                             kind: 'number',
                         },
                     ],
@@ -1715,7 +2149,7 @@ export const operations: readonly Operation[] = [
                             kind: 'string',
                         },
                         {
-                            name: 'headerIconId',
+                            name: 'headerVariantId',
                             optional: false,
                             nullable: false,
                             kind: 'number',
@@ -1867,7 +2301,7 @@ export const operations: readonly Operation[] = [
                             kind: 'string',
                         },
                         {
-                            name: 'headerIconId',
+                            name: 'headerVariantId',
                             optional: true,
                             nullable: false,
                             kind: 'number',
@@ -4763,6 +5197,12 @@ export const operations: readonly Operation[] = [
                     kind: 'object',
                     fields: [
                         {
+                            name: 'signatureId',
+                            optional: true,
+                            nullable: false,
+                            kind: 'number',
+                        },
+                        {
                             name: 'title',
                             optional: false,
                             nullable: false,
@@ -5016,6 +5456,12 @@ export const operations: readonly Operation[] = [
                     nullable: false,
                     kind: 'object',
                     fields: [
+                        {
+                            name: 'signatureId',
+                            optional: true,
+                            nullable: true,
+                            kind: 'number',
+                        },
                         {
                             name: 'title',
                             optional: true,
@@ -5287,6 +5733,243 @@ export const operations: readonly Operation[] = [
     },
     {
         ...{
+            id: 'mail-signatures.create',
+            resource: 'mail-signatures',
+            method: 'create',
+            verb: 'POST',
+            roles: ['writer'],
+            args: [
+                {
+                    name: 'dto',
+                    optional: false,
+                    nullable: false,
+                    kind: 'object',
+                    fields: [
+                        {
+                            name: 'title',
+                            optional: false,
+                            nullable: false,
+                            kind: 'string',
+                        },
+                        {
+                            name: 'companyName',
+                            optional: false,
+                            nullable: false,
+                            kind: 'string',
+                        },
+                        {
+                            name: 'text',
+                            optional: true,
+                            nullable: false,
+                            kind: 'string',
+                        },
+                        {
+                            name: 'address',
+                            optional: true,
+                            nullable: false,
+                            kind: 'string',
+                        },
+                        {
+                            name: 'email',
+                            optional: true,
+                            nullable: false,
+                            kind: 'string',
+                        },
+                        {
+                            name: 'website',
+                            optional: true,
+                            nullable: false,
+                            kind: 'string',
+                        },
+                        {
+                            name: 'logoAssetId',
+                            optional: true,
+                            nullable: false,
+                            kind: 'number',
+                        },
+                    ],
+                },
+            ],
+        },
+        execute: (args, options) =>
+            mailSignaturesApi.create(
+                args[0] as Parameters<typeof mailSignaturesApi.create>[0],
+                options,
+            ),
+    },
+    {
+        ...{
+            id: 'mail-signatures.list',
+            resource: 'mail-signatures',
+            method: 'list',
+            verb: 'GET',
+            roles: ['writer'],
+            args: [
+                {
+                    name: 'query',
+                    optional: true,
+                    nullable: false,
+                    kind: 'object',
+                    fields: [
+                        {
+                            name: 'page',
+                            optional: true,
+                            nullable: false,
+                            kind: 'number',
+                        },
+                        {
+                            name: 'limit',
+                            optional: true,
+                            nullable: false,
+                            kind: 'number',
+                        },
+                        {
+                            name: 'offset',
+                            optional: true,
+                            nullable: false,
+                            kind: 'number',
+                        },
+                        {
+                            name: 'isPopular',
+                            kind: 'boolean',
+                            optional: true,
+                            nullable: false,
+                        },
+                    ],
+                },
+            ],
+        },
+        execute: (args, options) =>
+            mailSignaturesApi.list(
+                args[0] as Parameters<typeof mailSignaturesApi.list>[0],
+                options,
+            ),
+    },
+    {
+        ...{
+            id: 'mail-signatures.getById',
+            resource: 'mail-signatures',
+            method: 'getById',
+            verb: 'GET',
+            roles: ['writer'],
+            args: [
+                {
+                    name: 'id',
+                    optional: false,
+                    nullable: false,
+                    kind: 'number',
+                },
+            ],
+        },
+        execute: (args, options) =>
+            mailSignaturesApi.getById(
+                args[0] as Parameters<typeof mailSignaturesApi.getById>[0],
+                options,
+            ),
+    },
+    {
+        ...{
+            id: 'mail-signatures.update',
+            resource: 'mail-signatures',
+            method: 'update',
+            verb: 'PATCH',
+            roles: ['writer'],
+            args: [
+                {
+                    name: 'id',
+                    optional: false,
+                    nullable: false,
+                    kind: 'number',
+                },
+                {
+                    name: 'dto',
+                    optional: false,
+                    nullable: false,
+                    kind: 'object',
+                    fields: [
+                        {
+                            name: 'title',
+                            optional: true,
+                            nullable: false,
+                            kind: 'string',
+                        },
+                        {
+                            name: 'companyName',
+                            optional: true,
+                            nullable: false,
+                            kind: 'string',
+                        },
+                        {
+                            name: 'text',
+                            optional: true,
+                            nullable: false,
+                            kind: 'string',
+                        },
+                        {
+                            name: 'address',
+                            optional: true,
+                            nullable: false,
+                            kind: 'string',
+                        },
+                        {
+                            name: 'email',
+                            optional: true,
+                            nullable: false,
+                            kind: 'string',
+                        },
+                        {
+                            name: 'website',
+                            optional: true,
+                            nullable: false,
+                            kind: 'string',
+                        },
+                        {
+                            name: 'logoAssetId',
+                            optional: true,
+                            nullable: false,
+                            kind: 'number',
+                        },
+                        {
+                            name: 'isPopular',
+                            kind: 'boolean',
+                            optional: true,
+                            nullable: false,
+                        },
+                    ],
+                },
+            ],
+        },
+        execute: (args, options) =>
+            mailSignaturesApi.update(
+                args[0] as Parameters<typeof mailSignaturesApi.update>[0],
+                args[1] as Parameters<typeof mailSignaturesApi.update>[1],
+                options,
+            ),
+    },
+    {
+        ...{
+            id: 'mail-signatures.remove',
+            resource: 'mail-signatures',
+            method: 'remove',
+            verb: 'DELETE',
+            roles: ['writer'],
+            args: [
+                {
+                    name: 'id',
+                    optional: false,
+                    nullable: false,
+                    kind: 'number',
+                },
+            ],
+        },
+        execute: (args, options) =>
+            mailSignaturesApi.remove(
+                args[0] as Parameters<typeof mailSignaturesApi.remove>[0],
+                options,
+            ),
+    },
+    {
+        ...{
             id: 'mail-snippets.create',
             resource: 'mail-snippets',
             method: 'create',
@@ -5488,6 +6171,12 @@ export const operations: readonly Operation[] = [
                     nullable: false,
                     kind: 'object',
                     fields: [
+                        {
+                            name: 'signatureId',
+                            optional: true,
+                            nullable: false,
+                            kind: 'number',
+                        },
                         {
                             name: 'account',
                             kind: 'enum',
@@ -5990,6 +6679,10 @@ export const operations: readonly Operation[] = [
                     optional: false,
                     nullable: false,
                     choices: [
+                        'instruction_headers',
+                        'instruction_images',
+                        'blog_images',
+                        'manager_files',
                         'legal_document_drafts',
                         'account_ava',
                         'gdoc_templates',
@@ -6044,6 +6737,68 @@ export const operations: readonly Operation[] = [
     },
     {
         ...{
+            id: 'private-assets.list',
+            resource: 'private-assets',
+            method: 'list',
+            verb: 'GET',
+            roles: [],
+            args: [
+                {
+                    name: 'query',
+                    optional: true,
+                    nullable: false,
+                    kind: 'object',
+                    fields: [
+                        {
+                            name: 'bucket',
+                            kind: 'enum',
+                            optional: true,
+                            nullable: false,
+                            choices: [
+                                'instruction_headers',
+                                'instruction_images',
+                                'blog_images',
+                                'manager_files',
+                                'legal_document_drafts',
+                                'account_ava',
+                                'gdoc_templates',
+                                'user_docs',
+                                'consultation_files',
+                                'partner_logos',
+                                'partner_main',
+                                'partner_adv',
+                            ],
+                        },
+                        {
+                            name: 'search',
+                            optional: true,
+                            nullable: false,
+                            kind: 'string',
+                        },
+                        {
+                            name: 'page',
+                            optional: true,
+                            nullable: false,
+                            kind: 'number',
+                        },
+                        {
+                            name: 'limit',
+                            optional: true,
+                            nullable: false,
+                            kind: 'number',
+                        },
+                    ],
+                },
+            ],
+        },
+        execute: (args, options) =>
+            privateAssetsApi.list(
+                args[0] as Parameters<typeof privateAssetsApi.list>[0],
+                options,
+            ),
+    },
+    {
+        ...{
             id: 'private-assets.create',
             resource: 'private-assets',
             method: 'create',
@@ -6062,6 +6817,10 @@ export const operations: readonly Operation[] = [
                             optional: false,
                             nullable: false,
                             choices: [
+                                'instruction_headers',
+                                'instruction_images',
+                                'blog_images',
+                                'manager_files',
                                 'legal_document_drafts',
                                 'account_ava',
                                 'gdoc_templates',
@@ -6226,6 +6985,68 @@ export const operations: readonly Operation[] = [
     },
     {
         ...{
+            id: 'private-variants.list',
+            resource: 'private-variants',
+            method: 'list',
+            verb: 'GET',
+            roles: [],
+            args: [
+                {
+                    name: 'query',
+                    optional: true,
+                    nullable: false,
+                    kind: 'object',
+                    fields: [
+                        {
+                            name: 'bucket',
+                            kind: 'enum',
+                            optional: true,
+                            nullable: false,
+                            choices: [
+                                'instruction_headers',
+                                'instruction_images',
+                                'blog_images',
+                                'manager_files',
+                                'legal_document_drafts',
+                                'account_ava',
+                                'gdoc_templates',
+                                'user_docs',
+                                'consultation_files',
+                                'partner_logos',
+                                'partner_main',
+                                'partner_adv',
+                            ],
+                        },
+                        {
+                            name: 'search',
+                            optional: true,
+                            nullable: false,
+                            kind: 'string',
+                        },
+                        {
+                            name: 'page',
+                            optional: true,
+                            nullable: false,
+                            kind: 'number',
+                        },
+                        {
+                            name: 'limit',
+                            optional: true,
+                            nullable: false,
+                            kind: 'number',
+                        },
+                    ],
+                },
+            ],
+        },
+        execute: (args, options) =>
+            privateVariantsApi.list(
+                args[0] as Parameters<typeof privateVariantsApi.list>[0],
+                options,
+            ),
+    },
+    {
+        ...{
             id: 'private-variants.create',
             resource: 'private-variants',
             method: 'create',
@@ -6244,6 +7065,10 @@ export const operations: readonly Operation[] = [
                             optional: false,
                             nullable: false,
                             choices: [
+                                'instruction_headers',
+                                'instruction_images',
+                                'blog_images',
+                                'manager_files',
                                 'legal_document_drafts',
                                 'account_ava',
                                 'gdoc_templates',
@@ -6370,7 +7195,7 @@ export const operations: readonly Operation[] = [
             resource: 'public-assets',
             method: 'create',
             verb: 'POST',
-            roles: [],
+            roles: ['admin', 'manager', 'writer'],
             args: [
                 {
                     name: 'dto',
@@ -6495,7 +7320,7 @@ export const operations: readonly Operation[] = [
             resource: 'public-assets',
             method: 'remove',
             verb: 'DELETE',
-            roles: [],
+            roles: ['admin', 'manager', 'writer'],
             args: [
                 {
                     name: 'id',
@@ -6517,7 +7342,7 @@ export const operations: readonly Operation[] = [
             resource: 'public-assets',
             method: 'togglePopular',
             verb: 'PATCH',
-            roles: [],
+            roles: ['admin', 'manager', 'writer'],
             args: [
                 {
                     name: 'id',
@@ -7075,7 +7900,7 @@ export const operations: readonly Operation[] = [
             resource: 'partner-banners',
             method: 'approve',
             verb: 'PATCH',
-            roles: ['admin', 'manager'],
+            roles: ['admin'],
             args: [
                 {
                     name: 'id',
@@ -7097,7 +7922,7 @@ export const operations: readonly Operation[] = [
             resource: 'partner-banners',
             method: 'reject',
             verb: 'PATCH',
-            roles: ['admin', 'manager'],
+            roles: ['admin'],
             args: [
                 {
                     name: 'id',
@@ -7134,7 +7959,7 @@ export const operations: readonly Operation[] = [
             resource: 'partner-banners',
             method: 'activate',
             verb: 'PATCH',
-            roles: ['admin', 'manager'],
+            roles: ['admin'],
             args: [
                 {
                     name: 'id',
@@ -7171,7 +7996,7 @@ export const operations: readonly Operation[] = [
             resource: 'partner-banners',
             method: 'finish',
             verb: 'PATCH',
-            roles: ['admin', 'manager'],
+            roles: ['admin'],
             args: [
                 {
                     name: 'id',
@@ -7206,6 +8031,54 @@ export const operations: readonly Operation[] = [
         execute: (args, options) =>
             partnerBannersApi.remove(
                 args[0] as Parameters<typeof partnerBannersApi.remove>[0],
+                options,
+            ),
+    },
+    {
+        ...{
+            id: 'partner-companies.create',
+            resource: 'partner-companies',
+            method: 'create',
+            verb: 'POST',
+            roles: ['admin'],
+            args: [
+                {
+                    name: 'dto',
+                    optional: false,
+                    nullable: false,
+                    kind: 'object',
+                    fields: [
+                        {
+                            name: 'partnerId',
+                            optional: false,
+                            nullable: false,
+                            kind: 'number',
+                        },
+                        {
+                            name: 'companyName',
+                            optional: false,
+                            nullable: false,
+                            kind: 'string',
+                        },
+                        {
+                            name: 'contactEmail',
+                            optional: true,
+                            nullable: false,
+                            kind: 'string',
+                        },
+                        {
+                            name: 'phone',
+                            optional: true,
+                            nullable: false,
+                            kind: 'string',
+                        },
+                    ],
+                },
+            ],
+        },
+        execute: (args, options) =>
+            partnerCompaniesApi.create(
+                args[0] as Parameters<typeof partnerCompaniesApi.create>[0],
                 options,
             ),
     },

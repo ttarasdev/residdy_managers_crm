@@ -1,6 +1,7 @@
 import type { PageResponse } from '../../common.types'
 import type { RequestOptions } from '../../http.types'
 import type {
+    CreateManagedPartnerCompanyDto,
     PartnerCompaniesQuery,
     PartnerCompany,
     PrivateVariant,
@@ -12,6 +13,10 @@ import { http, toFormData } from '../../http'
 const BASE = '/partner-companies'
 
 export const partnerCompaniesApi = {
+    /** POST /partner-companies — roles: admin */
+    create: (dto: CreateManagedPartnerCompanyDto, options?: RequestOptions) =>
+        http.post<PartnerCompany>(BASE, dto, { ...options }),
+
     /** GET /partner-companies/manage — roles: admin, manager */
     list: (query: PartnerCompaniesQuery = {}, options?: RequestOptions) =>
         http.get<PageResponse<PartnerCompany>>(`${BASE}/manage`, {

@@ -1,3 +1,5 @@
+import type { PageResponse } from '../../common.types'
+import type { PrivateMediaQuery } from '../private-assets/private-assets.types'
 import type { SuccessResponse, TogglePopularResponse } from '../../common.types'
 import type { RequestOptions } from '../../http.types'
 import type {
@@ -9,6 +11,13 @@ import { http, toFormData } from '../../http'
 const BASE = '/private-variants'
 
 export const privateVariantsApi = {
+    /** GET /private-variants — manager profile */
+    list: (query: PrivateMediaQuery = {}, options?: RequestOptions) =>
+        http.get<PageResponse<PrivateVariant>>(BASE, {
+            ...options,
+            query: { ...query },
+        }),
+
     /** POST /private-variants */
     create: (
         dto: CreatePrivateVariantDto,

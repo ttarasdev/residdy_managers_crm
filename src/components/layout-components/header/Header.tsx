@@ -1,8 +1,10 @@
 'use client'
 
+import { Avatar } from '../../ui/Avatar'
+
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { ChevronRight, LogOut, Moon, Sun, UserRound } from 'lucide-react'
+import { ChevronRight, LogOut, Moon, Sun } from 'lucide-react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { resourceForPath } from '../../../features/crm/catalog'
 import { useAuth } from '../../../shared/hooks/useAuth'
@@ -88,7 +90,10 @@ export function Header() {
                 </Button>
                 <Link href="/main/profile" className={c.profile}>
                     <span className={c.avatar}>
-                        <UserRound size={17} />
+                        <Avatar
+                            variantId={manager?.account?.avatarId}
+                            size={34}
+                        />
                     </span>
                     <span>
                         {manager?.name || 'Menedżer'}

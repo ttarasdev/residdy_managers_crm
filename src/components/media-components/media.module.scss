@@ -1,0 +1,130 @@
+@use '../../shared/styles/surface.mixins' as *;
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 14px;
+    padding: 20px;
+}
+
+.tile {
+    @include card;
+    padding: 8px;
+    cursor: pointer;
+    text-align: left;
+    color: var(--ink);
+    min-width: 0;
+
+    &[aria-pressed='true'],
+    &:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+    }
+
+    > small {
+        display: block;
+        margin: 9px 2px 2px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+.thumbnail {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 120px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--surface-muted);
+    color: var(--muted);
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+.icon {
+    background: #171c26;
+    color: #fff;
+
+    img {
+        width: 60%;
+        height: 60%;
+        object-fit: contain;
+    }
+}
+
+.large {
+    height: 260px;
+    max-width: 620px;
+}
+
+.picker {
+    @include stack(12px);
+}
+
+.selected {
+    width: 180px;
+}
+
+.dialog {
+    @include card;
+    width: 820px;
+    max-width: calc(100vw - 64px);
+    max-height: 80vh;
+    overflow: auto;
+}
+
+.toolbar {
+    @include row(12px);
+    padding: 20px;
+    justify-content: space-between;
+}
+
+.upload {
+    @include stack(14px);
+    padding: 20px;
+}
+
+.tabs {
+    @include row(8px);
+    flex-wrap: wrap;
+}
+
+.headers {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+
+.cover {
+    height: auto;
+    aspect-ratio: 3 / 1;
+}
+
+.signature {
+    @include stack(8px);
+    padding: 20px;
+    background: white;
+    color: #171c26;
+    border-top: 2px solid #a4aab7;
+
+    > span {
+        width: 280px;
+        max-width: 100%;
+        height: 100px;
+        background: white;
+    }
+
+    img {
+        object-fit: contain;
+    }
+
+    p {
+        white-space: pre-wrap;
+        color: #6c7689;
+    }
+}

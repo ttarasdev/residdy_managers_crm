@@ -1,5 +1,7 @@
 'use client'
 
+import { isBannerActionAvailable } from '../banner-actions'
+
 import type { Operation } from '../types'
 import { operationLabels } from '../labels'
 import { rowName } from '../data'
@@ -35,15 +37,19 @@ export function RecordActions({
                     <RecordDetails resource={resource} value={record} />
                 </div>
                 <footer className={c.dialogFooter}>
-                    {operations.map((operation) => (
-                        <Button
-                            key={operation.id}
-                            disabled={!hasAnyRole(operation.roles)}
-                            onClick={() => onAction(operation)}
-                        >
-                            {operationLabels[operation.method]}
-                        </Button>
-                    ))}
+                    {operations
+                        .filter((operation) =>
+                            isBannerActionAvailable(operation, record),
+                        )
+                        .map((operation) => (
+                            <Button
+                                key={operation.id}
+                                disabled={!hasAnyRole(operation.roles)}
+                                onClick={() => onAction(operation)}
+                            >
+                                {operationLabels[operation.method]}
+                            </Button>
+                        ))}
                 </footer>
             </div>
         </ModalPortal>

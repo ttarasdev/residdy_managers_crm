@@ -22,8 +22,8 @@ export enum InstructionBlockType {
 export interface CreateCaseInstructionBlockDto {
     instructionId: number
     type: InstructionBlockType
-    variantId?: number
-    contentJson?: Record<string, unknown>
+    variantId?: number | null
+    contentJson?: Record<string, unknown> | null
 }
 
 export interface CaseInstructionBlocksQuery {

@@ -1,4 +1,6 @@
 const relations: Record<string, string> = {
+    signatureId: 'mail-signatures',
+    logoAssetId: 'public-assets',
     planId: 'subscription-plans',
     subscriptionPlanId: 'subscription-plans',
     priceId: 'subscription-prices',
@@ -24,8 +26,13 @@ const relations: Record<string, string> = {
     reminderId: 'case-reminders',
     iconId: 'public-assets',
     headerIconId: 'public-assets',
+    headerVariantId: 'private-variants',
+    photoId: 'private-variants',
+    logoId: 'private-variants',
+    mainPhotoId: 'private-variants',
     variantId: 'private-variants',
     avatarId: 'private-variants',
+    userFileAssetId: 'private-assets',
     mediaAssetId: 'private-assets',
     assetId: 'private-assets',
     varIds: 'g-doc-vars',
@@ -35,6 +42,9 @@ const relations: Record<string, string> = {
 }
 
 export function getRelation(name: string, resource?: string) {
+    if (resource === 'app-announcements' && /^image(Pl|Ua|En|Ru)Id$/.test(name))
+        return 'public-assets'
+
     if (name === 'typeId' && resource?.startsWith('g-doc')) return 'g-doc-types'
 
     if (name === 'assetId' && resource === 'consultation-categories')

@@ -29,3 +29,10 @@ export interface CreatePrivateAssetDto {
     ownerAccountId?: number
     visibility?: AssetVisibility
 }
+
+export interface PrivateMediaQuery {
+    bucket?: PrivateBucket
+    search?: string
+    page?: number
+    limit?: number
+}

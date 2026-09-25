@@ -8,22 +8,29 @@ import { getRelation } from '../relations'
 import type { FieldSchema } from '../types'
 import { getOperation, isRecord, normalizeRows, rowName } from '../data'
 import { label, valueLabel } from '../labels'
-import { ActionDialog } from './ActionDialog'
 import { Button } from '../../../components/ui/Button'
 import TextInput from '../../../components/form-components/text-input/TextInput'
 import FormTextarea from '../../../components/form-components/form-textarea/FormTextarea'
 import MediaFileInput from '../../../components/form-components/media-file-input/MediaFileInput'
 import { RichTextInput } from '../../../components/form-components/tiptap-input/RichTextInput'
+import { MediaPicker } from '../../../components/media-components/MediaPicker'
+import { mediaPolicy } from '../media'
+import {
+    MailSignaturePreview,
+    MailSignatureSnapshotPreview,
+} from './MailSignaturePreview'
 import c from './crm.module.scss'
 
 export function SchemaForm({
     fields,
+    originalRecord,
     value,
     onChange,
     disabled,
     resource,
 }: {
     fields: FieldSchema[]
+    originalRecord?: Record<string, unknown>
     value: Record<string, unknown>
     onChange: (value: Record<string, unknown>) => void
     disabled?: boolean
@@ -31,42 +38,119 @@ export function SchemaForm({
 }) {
     return (
         <div className={c.fields}>
-            {fields.map((field) => (
-                <Field
-                    key={field.name}
-                    field={field}
-                    value={value[field.name]}
-                    onChange={(next) => {
-                        const updated = { ...value, [field.name]: next }
+            {resource === 'mail-signatures' && value.companyName ? (
+                <MailSignaturePreview value={value} />
+            ) : null}
+            {fields
+                .filter((field) => {
+                    if (resource === 'case-instruction-blocks') {
+                        if (field.name === 'variantId')
+                            return value.type === 'photo'
 
-                        if (
-                            field.kind === 'file' &&
-                            next instanceof File &&
-                            isRecord(updated.dto) &&
-                            !updated.dto.originalName
+                        if (field.name === 'contentJson')
+                            return value.type === 'text'
+                    }
+
+                    if (resource !== 'app-announcements') return true
+
+                    if (field.name === 'actionUrl')
+                        return value.actionType === 'external_url'
+
+                    if (field.name === 'actionScreen')
+                        return value.actionType === 'screen'
+
+                    if (
+                        ['actionRecordType', 'actionRecordId'].includes(
+                            field.name,
                         )
-                            updated.dto = {
-                                ...updated.dto,
-                                originalName: next.name,
+                    )
+                        return value.actionType === 'record'
+
+                    return true
+                })
+                .map((field) => (
+                    <Field
+                        key={field.name}
+                        relationOverride={
+                            resource === 'app-announcements' &&
+                            field.name === 'actionRecordId'
+                                ? (
+                                      {
+                                          case: 'cases',
+                                          blog_post: 'blog-posts',
+                                          consultation:
+                                              'specialist-consultations',
+                                          partner_company: 'partner-companies',
+                                      } as Record<string, string>
+                                  )[String(value.actionRecordType)]
+                                : undefined
+                        }
+                        originalRecord={originalRecord}
+                        field={field}
+                        value={value[field.name]}
+                        onChange={(next) => {
+                            const updated = { ...value, [field.name]: next }
+
+                            if (
+                                resource === 'case-instruction-blocks' &&
+                                field.name === 'type'
+                            ) {
+                                updated.variantId = null
+
+                                updated.contentJson = null
                             }
 
-                        onChange(updated)
-                    }}
-                    disabled={disabled}
-                    resource={resource}
-                />
-            ))}
+                            if (
+                                resource === 'app-announcements' &&
+                                field.name === 'actionType'
+                            ) {
+                                for (const name of [
+                                    'actionUrl',
+                                    'actionScreen',
+                                    'actionRecordType',
+                                    'actionRecordId',
+                                ])
+                                    delete updated[name]
+                            }
+
+                            if (
+                                resource === 'app-announcements' &&
+                                field.name === 'actionRecordType'
+                            )
+                                delete updated.actionRecordId
+
+                            if (
+                                field.kind === 'file' &&
+                                next instanceof File &&
+                                isRecord(updated.dto) &&
+                                !updated.dto.originalName
+                            )
+                                updated.dto = {
+                                    ...updated.dto,
+                                    originalName: next.name,
+                                }
+
+                            onChange(updated)
+                        }}
+                        disabled={disabled}
+                        resource={resource}
+                    />
+                ))}
         </div>
     )
 }
 
 function Field({
+    originalRecord,
+    relationOverride,
     field,
     value,
     onChange,
     disabled,
     resource,
 }: {
+    originalRecord?: Record<string, unknown>
+    relationOverride?: string
     field: FieldSchema
     value: unknown
     onChange: (value: unknown) => void
@@ -75,9 +159,12 @@ function Field({
 }) {
     const id = useId()
 
-    const title = label(field.name)
+    const title =
+        resource === 'partners' && field.name === 'name'
+            ? 'Imię'
+            : label(field.name)
 
-    const relation = getRelation(field.name, resource)
+    const relation = relationOverride ?? getRelation(field.name, resource)
 
     const required = !field.optional
 
@@ -88,6 +175,7 @@ function Field({
             <fieldset className={c.fieldset}>
                 <legend>{title}</legend>
                 <SchemaForm
+                    originalRecord={originalRecord}
                     resource={resource}
                     fields={field.fields ?? []}
                     value={isRecord(value) ? value : {}}
@@ -189,6 +277,26 @@ function Field({
         )
     }
 
+    const media = mediaPolicy(resource, field.name, relation)
+
+    if (media && field.kind === 'number')
+        return (
+            <div className={c.field}>
+                <label htmlFor={id}>
+                    {title}
+                    {required && ' *'}
+                </label>
+                <MediaPicker
+                    policy={media}
+                    value={value}
+                    onChange={onChange}
+                    disabled={disabled}
+                    id={id}
+                    announcement={resource === 'app-announcements'}
+                />
+            </div>
+        )
+
     if (relation && field.kind === 'number')
         return (
             <div className={c.field}>
@@ -197,13 +305,36 @@ function Field({
                     {required && ' *'}
                 </label>
                 <EntityPicker
+                    announcementImage={
+                        resource === 'app-announcements' &&
+                        /^image(Pl|Ua|En|Ru)Id$/.test(field.name)
+                    }
                     id={id}
                     resource={relation}
                     value={value}
                     required={required}
                     disabled={disabled}
-                    onChange={onChange}
+                    onChange={(next) =>
+                        onChange(
+                            field.name === 'signatureId' && next === ''
+                                ? field.nullable
+                                    ? null
+                                    : undefined
+                                : next,
+                        )
+                    }
                 />
+                {field.name === 'signatureId' && Number(value) > 0 ? (
+                    resource === 'mail-jobs' &&
+                    Number(value) === originalRecord?.signatureId &&
+                    originalRecord.signatureSnapshot ? (
+                        <MailSignatureSnapshotPreview
+                            value={originalRecord.signatureSnapshot}
+                        />
+                    ) : (
+                        <MailSignaturePreview id={Number(value)} />
+                    )
+                ) : null}
             </div>
         )
 
@@ -218,7 +349,7 @@ function Field({
                     id={id}
                     disabled={disabled}
                     required={required}
-                    value={value === undefined ? '' : String(value)}
+                    value={value == null ? '' : String(value)}
                     onChange={(event) =>
                         onChange(
                             event.target.value === ''
@@ -334,6 +465,7 @@ function Field({
 }
 
 function EntityPicker({
+    announcementImage = false,
     id,
     resource,
     value,
@@ -341,6 +473,7 @@ function EntityPicker({
     required,
     disabled,
 }: {
+    announcementImage?: boolean
     id: string
     resource: string
     value: unknown
@@ -348,30 +481,6 @@ function EntityPicker({
     required: boolean
     disabled?: boolean
 }) {
-    const [upload, setUpload] = useState(false)
-
-    const create = getOperation(resource, 'create')
-
-    const uploadDialog =
-        upload && create ? (
-            <ActionDialog
-                operation={create}
-                onClose={() => setUpload(false)}
-                onSuccess={(result) => {
-                    const data =
-                        isRecord(result) && isRecord(result.asset)
-                            ? result.asset
-                            : result
-
-                    if (isRecord(data) && data.id) {
-                        onChange(data.id)
-
-                        setUpload(false)
-                    }
-                }}
-            />
-        ) : null
-
     const [search, setSearch] = useState('')
 
     const [page, setPage] = useState(1)
@@ -379,7 +488,7 @@ function EntityPicker({
     const operation = getOperation(resource, 'list')
 
     const query = useQuery({
-        queryKey: ['crm', resource, 'options', page],
+        queryKey: ['crm', resource, 'options', page, announcementImage],
         enabled: Boolean(operation),
         queryFn: ({ signal }) =>
             operation!.execute(
@@ -388,7 +497,11 @@ function EntityPicker({
                         page,
                         limit: 40,
                         ...(resource === 'public-assets'
-                            ? { bucket: 'icons' }
+                            ? {
+                                  bucket: announcementImage
+                                      ? 'system_files'
+                                      : 'icons',
+                              }
                             : {}),
                     },
                 ],
@@ -414,22 +527,14 @@ function EntityPicker({
                     required={required}
                     disabled={disabled}
                     placeholder="ID pliku z biblioteki"
-                    value={value === undefined ? '' : String(value)}
+                    value={value == null ? '' : String(value)}
                     onChange={(event) => onChange(event.target.value)}
                 />
-                {create && (
-                    <Button disabled={disabled} onClick={() => setUpload(true)}>
-                        <Plus size={15} />
-                        Prześlij plik
-                    </Button>
-                )}
-                {uploadDialog}
             </div>
         )
 
     return (
         <div className={c.picker}>
-            {uploadDialog}
             <input
                 aria-label="Filtruj dostępne pozycje"
                 placeholder="Filtruj pozycje…"
@@ -441,7 +546,7 @@ function EntityPicker({
                 id={id}
                 required={required}
                 disabled={disabled || query.isPending}
-                value={value === undefined ? '' : String(value)}
+                value={value == null ? '' : String(value)}
                 onChange={(event) => onChange(event.target.value)}
             >
                 <option value="">
@@ -457,12 +562,6 @@ function EntityPicker({
                     </option>
                 ))}
             </select>
-            {resource === 'public-assets' && create && (
-                <Button disabled={disabled} onClick={() => setUpload(true)}>
-                    <Plus size={15} />
-                    Prześlij ikonę
-                </Button>
-            )}
             {query.error && (
                 <p role="alert">
                     {query.error.message}

@@ -1,0 +1,57 @@
+@use '../../../shared/styles/surface.mixins' as *;
+
+.filters {
+    @include card;
+    @include stack(16px);
+    padding: 24px;
+}
+
+.fields {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+    gap: 20px;
+    align-items: end;
+
+    input,
+    select,
+    button {
+        height: 42px;
+    }
+}
+
+.section {
+    @include card;
+    overflow: hidden;
+    min-width: 0;
+}
+
+.sectionHeader {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+
+    h2 {
+        font-size: 16px;
+        font-weight: 600;
+    }
+}
+
+.tableDetails {
+    border-top: 1px solid var(--border);
+
+    summary {
+        padding: 16px 24px;
+        color: var(--muted);
+        font-size: 13px;
+        cursor: pointer;
+
+        &:hover {
+            color: var(--ink);
+            background: var(--surface-muted);
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: -4px;
+        }
+    }
+}

@@ -6,6 +6,7 @@ import { Badge } from '../../../components/ui/Badge'
 import { getValue, rowName } from '../data'
 import { label, valueLabel } from '../labels'
 import c from './crm.module.scss'
+import { MediaThumbnail } from '../../../components/media-components/MediaThumbnail'
 
 export function DataTable({
     rows,
@@ -18,11 +19,25 @@ export function DataTable({
     href?: (row: Record<string, unknown>) => string
     onSelect?: (row: Record<string, unknown>) => void
 }) {
+    const imageKey = [
+        'imagePlId',
+        'logoAssetId',
+        'avatarId',
+        'mainPhotoId',
+        'headerVariantId',
+        'variantId',
+        'photoId',
+        'logoId',
+        'iconId',
+        'headerIconId',
+    ].find((key) => rows.some((row) => typeof row[key] === 'number'))
+
     return (
         <div className={c.tableScroll}>
             <table className={c.table}>
                 <thead>
                     <tr>
+                        {imageKey && <th>Podgląd</th>}
                         {columns.map((key) => (
                             <th key={key}>{label(key.split('.').at(-1)!)}</th>
                         ))}
@@ -36,6 +51,23 @@ export function DataTable({
                 <tbody>
                     {rows.map((row, index) => (
                         <tr key={String(row.id ?? row.key ?? index)}>
+                            {imageKey && (
+                                <td style={{ width: 110 }}>
+                                    <MediaThumbnail
+                                        kind={
+                                            /icon/i.test(imageKey) ||
+                                            [
+                                                'imagePlId',
+                                                'logoAssetId',
+                                            ].includes(imageKey)
+                                                ? 'public-assets'
+                                                : 'private-variants'
+                                        }
+                                        id={Number(row[imageKey])}
+                                        icon={/icon/i.test(imageKey)}
+                                    />
+                                </td>
+                            )}
                             {columns.map((key) => (
                                 <td key={key}>
                                     {/status|verified|isActive|isPopular|isPinned|available|enabled/i.test(

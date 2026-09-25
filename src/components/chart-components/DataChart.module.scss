@@ -1,0 +1,25 @@
+@use '../../shared/styles/surface.mixins' as *;
+
+.chart {
+    @include stack(20px);
+    padding: 24px;
+}
+
+.heading {
+    @include stack(6px);
+
+    h3 {
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    p {
+        @include muted;
+    }
+}
+
+.canvas {
+    position: relative;
+    height: 300px;
+    min-width: 0;
+}

@@ -1,5 +1,7 @@
 'use client'
 
+import { isBannerActionAvailable } from '../banner-actions'
+
 import { Suspense, useState } from 'react'
 import Link from 'next/link'
 import { useSearchParams, useRouter } from 'next/navigation'
@@ -12,6 +14,7 @@ import {
     Search,
     Settings2,
 } from 'lucide-react'
+import { useAuth } from '../../../shared/hooks/useAuth'
 import { useRoles } from '../../../shared/hooks/useRoles'
 import { getResource } from '../catalog'
 import {
@@ -32,6 +35,8 @@ import { DataTable } from './DataTable'
 import { RecordDetails } from './RecordDetails'
 import { SchemaForm } from './SchemaForm'
 import { ActionDialog } from './ActionDialog'
+import { MediaLibrary } from './MediaLibrary'
+import type { MediaKind } from '../media'
 import { AnalyticsPage } from './AnalyticsPage'
 import { RecordActions } from './RecordActions'
 import { TrialSettings } from './TrialSettings'
@@ -39,6 +44,19 @@ import { CaseWorkspace } from './CaseWorkspace'
 import c from './crm.module.scss'
 
 export function ResourcePage(props: { resource: string; id?: string }) {
+    if (
+        !props.id &&
+        ['public-assets', 'private-assets', 'private-variants'].includes(
+            props.resource,
+        )
+    )
+        return (
+            <MediaLibrary
+                key={props.resource}
+                kind={props.resource as MediaKind}
+            />
+        )
+
     if (props.resource === 'analytics') return <AnalyticsPage />
 
     return (
@@ -65,6 +83,8 @@ function ResourceContent({
     const searchParams = useSearchParams()
 
     const { hasAnyRole } = useRoles()
+
+    const { manager } = useAuth()
 
     const all = getOperations(resourceId)
 
@@ -157,8 +177,19 @@ function ResourceContent({
 
     const record = id && isRecord(query.data) ? query.data : undefined
 
+    const canChangeMedia =
+        !['public-assets', 'private-assets', 'private-variants'].includes(
+            resourceId,
+        ) ||
+        (record &&
+            (hasAnyRole(['admin']) ||
+                Number(record.ownerAccountId ?? record.createdByAccountId) ===
+                    manager?.accountId))
+
     const methods = all.filter(
         (item) =>
+            (canChangeMedia ||
+                !['remove', 'togglePopular'].includes(item.method)) &&
             ![
                 'list',
                 'getById',
@@ -168,9 +199,11 @@ function ResourceContent({
                 'confirm',
                 'resend',
                 'getMe',
+                'uploadMyAvatar',
                 'trialSettings',
                 'updateTrialSettings',
-            ].includes(item.method) && !item.method.startsWith('listBy'),
+            ].includes(item.method) &&
+            !item.method.startsWith('listBy'),
     )
 
     const rowMethods = methods.filter(
@@ -283,6 +316,9 @@ function ResourceContent({
                         <RefreshCw size={16} />
                     </Button>
                     {(id ? [...pageMethods, ...rowMethods] : pageMethods)
+                        .filter((operation) =>
+                            isBannerActionAvailable(operation, record),
+                        )
                         .filter(
                             (item) =>
                                 !['progress', 'build', 'tick'].includes(
@@ -641,6 +677,8 @@ function ResourceContent({
                     key={action.operation.id}
                     {...action}
                     onSuccess={() => {
+                        if (resourceId === 'partner-banners') setAction(null)
+
                         if (id && action.operation.method === 'remove')
                             router.replace(resource.path)
                     }}

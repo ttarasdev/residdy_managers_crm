@@ -1,5 +1,5 @@
 import type { Languages } from '../../common.types'
-import type { PublicAsset } from '../../media/public-assets/public-assets.types'
+import type { PrivateVariant } from '../../media/private-variants/private-variants.types'
 import type { CaseInstructionBlock } from '../case-instruction-blocks/case-instruction-blocks.types'
 
 export interface CaseInstruction {
@@ -8,9 +8,10 @@ export interface CaseInstruction {
     status: CaseInstructionStatus
     description: string
     lan: Languages
-    headerIconId: number
+    headerVariantId: number | null
     isPopular: boolean
-    headerIcon?: PublicAsset | null
+    headerVariant?: PrivateVariant | null
+    headerIconId?: number | null
     blocks?: CaseInstructionBlock[]
     createdAt: string
     updatedAt: string
@@ -25,7 +26,7 @@ export enum CaseInstructionStatus {
 export interface CreateCaseInstructionDto {
     title: string
     description: string
-    headerIconId: number
+    headerVariantId: number
     lan: Languages
     status?: CaseInstructionStatus
     isPopular?: boolean

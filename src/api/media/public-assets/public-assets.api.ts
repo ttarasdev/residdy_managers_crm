@@ -15,7 +15,7 @@ import { http, toFormData } from '../../http'
 const BASE = '/public-assets'
 
 export const publicAssetsApi = {
-    /** POST /public-assets */
+    /** POST /public-assets — roles: admin, manager, writer */
     create: (dto: CreatePublicAssetDto, file: File, options?: RequestOptions) =>
         http.post<PublicAssetUploadResponse>(`${BASE}`, toFormData(dto, file), {
             ...options,
@@ -36,7 +36,7 @@ export const publicAssetsApi = {
             auth: false,
         }),
 
-    /** DELETE /public-assets/:id */
+    /** DELETE /public-assets/:id — roles: admin, manager, writer; author or admin */
     remove: (id: number, options?: RequestOptions) =>
         http.delete<SuccessResponse>(
             `${BASE}/${encodeURIComponent(String(id))}`,
@@ -45,7 +45,7 @@ export const publicAssetsApi = {
             },
         ),
 
-    /** PATCH /public-assets/:id/toggle-popular */
+    /** PATCH /public-assets/:id/toggle-popular — roles: admin, manager, writer; author or admin */
     togglePopular: (id: number, options?: RequestOptions) =>
         http.patch<TogglePopularResponse>(
             `${BASE}/${encodeURIComponent(String(id))}/toggle-popular`,

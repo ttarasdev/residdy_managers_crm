@@ -2,6 +2,16 @@ import type { Resource } from './types'
 
 export const resources: readonly Resource[] = [
     {
+        id: 'app-announcements',
+        title: 'Reklamy w aplikacji',
+        description:
+            'Popap przy otwarciu aplikacji dla wszystkich użytkowników. Jeden aktywny harmonogram, ustawiany odstęp między pokazami na urządzeniu. Daty w lokalnej strefie przeglądarki.',
+        group: 'Komunikacja',
+        path: '/main/resources/app-announcements',
+        roles: ['writer'],
+        columns: ['title', 'enabled', 'startsAt', 'endsAt', 'intervalMinutes', 'actionType'],
+    },
+    {
         id: 'subscription-plans',
         title: 'Plany subskrypcji',
         description: 'Wersje planów, limity i okres próbny',
@@ -267,7 +277,7 @@ export const resources: readonly Resource[] = [
     {
         id: 'private-assets',
         title: 'Pliki prywatne',
-        description: 'Dodawanie i pobieranie plików według ID',
+        description: 'Biblioteka plików z kontrolą dostępu',
         group: 'Biblioteka',
         path: '/main/resources/private-assets',
         roles: [],
@@ -410,6 +420,16 @@ export const resources: readonly Resource[] = [
         path: '/main/mail',
         roles: ['writer'],
         columns: ['id'],
+        hidden: false,
+    },
+    {
+        id: 'mail-signatures',
+        title: 'Podpisy e-mail',
+        description: 'Logo i dane firmy dołączane do wiadomości',
+        group: 'Komunikacja',
+        path: '/main/resources/mail-signatures',
+        roles: ['writer'],
+        columns: ['title', 'companyName', 'email'],
         hidden: false,
     },
     {

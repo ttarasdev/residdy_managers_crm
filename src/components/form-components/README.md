@@ -4,7 +4,7 @@
 
 Базові поля: `TextInput`, `FormTextarea`, `FormSelect`, `FormChooseDate`, `MediaFileInput`, `TipTapInput` / `RichTextInput`. Списки: `FormList`, `ApiFormList` і тонкі обгортки для ролей, категорій, типів справ, інструкцій, нагадувань, спеціалістів та документів.
 
-`FormList` зберігає вибрані ID інших сторінок. `PrivateMediaList` приймає явний список ID, бо приватний media API не має list endpoint. `PrivateAssetPreview` завантажує Blob з авторизацією та звільняє object URL при демонтажі.
+`FormList` зберігає вибрані ID інших сторінок. `PrivateMediaList` приймає явний список ID для вже відомих зв’язків. Нові поля CRM використовують `components/media-components/MediaPicker` зі списками бакетів і візуальним вибором. `PrivateAssetPreview` завантажує Blob з авторизацією та звільняє object URL при демонтажі.
 
 `ModalPortal` використовує native dialog: фокус, Escape, повернення фокусу, окремий portal для вкладеного завантаження файлів. Кнопки всередині полів мають `type="button"`.
 

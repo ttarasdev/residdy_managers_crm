@@ -1,6 +1,7 @@
 import type { MailAccount } from '../mail-accounts/mail-accounts.types'
 
 export interface SendMailDto {
+    signatureId?: number
     account: MailAccount
     toEmail: string
     subject: string

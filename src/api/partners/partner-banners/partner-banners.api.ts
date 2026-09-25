@@ -25,7 +25,7 @@ export const partnerBannersApi = {
             { ...options },
         ),
 
-    /** PATCH /partner-banners/:id/approve — roles: admin, manager */
+    /** PATCH /partner-banners/:id/approve — roles: admin */
     approve: (id: number, options?: RequestOptions) =>
         http.patch<PartnerBanner>(
             `${BASE}/${encodeURIComponent(String(id))}/approve`,
@@ -33,7 +33,7 @@ export const partnerBannersApi = {
             { ...options },
         ),
 
-    /** PATCH /partner-banners/:id/reject — roles: admin, manager */
+    /** PATCH /partner-banners/:id/reject — roles: admin */
     reject: (
         id: number,
         dto: RejectPartnerBannerDto,
@@ -45,7 +45,7 @@ export const partnerBannersApi = {
             { ...options },
         ),
 
-    /** PATCH /partner-banners/:id/activate — roles: admin, manager */
+    /** PATCH /partner-banners/:id/activate — roles: admin */
     activate: (
         id: number,
         dto: ActivatePartnerBannerDto,
@@ -57,7 +57,7 @@ export const partnerBannersApi = {
             { ...options },
         ),
 
-    /** PATCH /partner-banners/:id/finish — roles: admin, manager */
+    /** PATCH /partner-banners/:id/finish — roles: admin */
     finish: (id: number, options?: RequestOptions) =>
         http.patch<PartnerBanner>(
             `${BASE}/${encodeURIComponent(String(id))}/finish`,

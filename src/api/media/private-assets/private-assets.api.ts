@@ -1,3 +1,5 @@
+import type { PageResponse } from '../../common.types'
+import type { PrivateMediaQuery } from '../private-assets/private-assets.types'
 import type {
     SignedUrlResponse,
     SuccessResponse,
@@ -13,6 +15,13 @@ import { http, toFormData } from '../../http'
 const BASE = '/private-assets'
 
 export const privateAssetsApi = {
+    /** GET /private-assets — manager profile */
+    list: (query: PrivateMediaQuery = {}, options?: RequestOptions) =>
+        http.get<PageResponse<PrivateAsset>>(BASE, {
+            ...options,
+            query: { ...query },
+        }),
+
     /** POST /private-assets */
     create: (
         dto: CreatePrivateAssetDto,

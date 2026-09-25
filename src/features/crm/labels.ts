@@ -1,4 +1,7 @@
 export const operationLabels: Record<string, string> = {
+    uploadMyAvatar: 'Zmień zdjęcie',
+    uploadAvatar: 'Zmień zdjęcie konta',
+    uploadImage: 'Prześlij obraz reklamy',
     retryOperations: 'Ponów operacje',
     cancelByAdmin: 'Anuluj rezerwację',
     retire: 'Wycofaj',
@@ -59,6 +62,19 @@ export const operationLabels: Record<string, string> = {
 }
 
 const names: Record<string, string> = {
+    intervalMinutes: 'Odstęp między pokazami (minuty)',
+    signatureId: 'Podpis e-mail',
+    logoAssetId: 'Logo firmy',
+    signatureSnapshot: 'Zapisany podpis',
+    imagePlId: 'Obraz — polski',
+    imageUaId: 'Obraz — ukraiński',
+    imageEnId: 'Obraz — angielski',
+    imageRuId: 'Obraz — rosyjski',
+    actionType: 'Działanie po kliknięciu',
+    actionUrl: 'Adres strony HTTPS',
+    actionScreen: 'Ekran aplikacji',
+    actionRecordType: 'Typ wpisu',
+    actionRecordId: 'ID wpisu',
     planId: 'Plan subskrypcji',
     priceId: 'Cena subskrypcji',
     subscriptionPlanId: 'Plan w momencie zakupu',
@@ -148,6 +164,7 @@ const names: Record<string, string> = {
     id: 'ID',
     title: 'Tytuł',
     name: 'Nazwa',
+    companyName: 'Nazwa firmy',
     surname: 'Nazwisko',
     email: 'E-mail',
     phone: 'Telefon',
@@ -195,6 +212,7 @@ const names: Record<string, string> = {
     categoryIds: 'Kategorie',
     roleIds: 'Role',
     iconId: 'Ikona',
+    headerVariantId: 'Zdjęcie okładki',
     headerIconId: 'Ikona nagłówka',
     variantId: 'Zdjęcie',
     avatarId: 'Awatar',
@@ -264,6 +282,12 @@ export function label(key: string): string {
 }
 
 const values: Record<string, string> = {
+    external_url: 'Strona internetowa',
+    screen: 'Ekran aplikacji',
+    record: 'Konkretny wpis',
+    subscription_plans: 'Wybór subskrypcji',
+    blog_post: 'Wpis bloga',
+    partner_company: 'Firma partnera',
     registration_terms: 'Regulamin rejestracji',
     privacy_policy: 'Polityka prywatności',
     subscription_terms: 'Regulamin subskrypcji',

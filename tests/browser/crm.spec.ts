@@ -101,9 +101,68 @@ async function mockApi(
                 ],
                 total: 2,
             }
-        else if (path.startsWith('/private-variants/'))
-            data = { id: 5, mediumAssetId: 6 }
-        else if (path.endsWith('/download'))
+        else if (
+            path === '/public-assets' ||
+            /^\/public-assets\/\d+$/.test(path)
+        ) {
+            const asset = {
+                id: 1,
+                originalName: 'White house',
+                bucket:
+                    new URL(request.url()).searchParams.get('bucket') ??
+                    'icons',
+                url: '/public/icons/house.svg',
+                createdByAccountId: 10,
+            }
+
+            data =
+                path === '/public-assets' ? { rows: [asset], total: 1 } : asset
+        } else if (path.startsWith('/public/')) {
+            return route.fulfill({
+                headers,
+                contentType: 'image/svg+xml',
+                body: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M12 45 50 12 88 45V88H60V60H40V88H12Z" fill="white"/></svg>',
+            })
+        } else if (
+            path === '/private-variants' ||
+            path.startsWith('/private-variants/')
+        ) {
+            const variant = {
+                id: 5,
+                smallAssetId: 6,
+                mediumAssetId: 6,
+                largeAssetId: 6,
+                bucket:
+                    new URL(request.url()).searchParams.get('bucket') ??
+                    'instruction_headers',
+                originalName: 'Instruction cover',
+                ownerAccountId: 10,
+            }
+
+            data =
+                path === '/private-variants'
+                    ? { rows: [variant], total: 1 }
+                    : variant
+        } else if (
+            path === '/mail-signatures' ||
+            path.startsWith('/mail-signatures/')
+        ) {
+            const signature = {
+                id: 1,
+                title: 'Residdy',
+                companyName: 'Residdy',
+                text: 'Zespół Residdy',
+                email: 'contact@example.test',
+            }
+
+            data =
+                path === '/mail-signatures'
+                    ? { rows: [signature], total: 1 }
+                    : signature
+        } else if (
+            path.endsWith('/download') ||
+            /^\/private-assets\/\d+\/file$/.test(path)
+        )
             return route.fulfill({
                 headers,
                 contentType: 'image/png',
@@ -268,23 +327,23 @@ test('blog creation supports a nested file upload and structured rich content', 
         .getByRole('textbox', { name: 'Treść', exact: true })
         .fill('Treść wpisu')
 
-    await parent
-        .getByRole('button', { name: 'Prześlij plik', exact: true })
-        .click()
+    await expect(
+        parent.getByRole('button', { name: 'Wybierz z biblioteki' }),
+    ).toHaveCount(0)
 
-    const upload = page.getByRole('dialog').last()
+    await parent.getByLabel(/^Zdjęcie/).click()
 
-    await upload.locator('input[type=file]').setInputFiles({
+    await parent.locator('input[type=file]').setInputFiles({
         name: 'cover.png',
         mimeType: 'image/png',
         buffer: Buffer.from('mock-image'),
     })
 
-    await upload.getByLabel(/^Przeznaczenie/).selectOption('partner_main')
+    await parent
+        .getByRole('button', { name: 'Prześlij plik', exact: true })
+        .click()
 
-    await upload.getByRole('button', { name: 'Dodaj', exact: true }).click()
-
-    await expect(page.getByRole('dialog')).toHaveCount(1)
+    await expect(parent.locator('input[type=file]')).toHaveCount(0)
 
     await parent.getByRole('button', { name: 'Dodaj', exact: true }).click()
 
@@ -609,6 +668,13 @@ test('v2 analytics validates UTC ranges and paginates server aggregates', async 
                 group: 'day',
                 toExclusive: true,
                 cacheSeconds: 120,
+                registrations: [
+                    { period: '2026-09-01', type: 'users', count: 12 },
+                    { period: '2026-09-02', type: 'users', count: 18 },
+                    { period: '2026-09-03', type: 'users', count: 9 },
+                    { period: '2026-09-01', type: 'managers', count: 2 },
+                    { period: '2026-09-03', type: 'managers', count: 4 },
+                ],
                 plans: {
                     rows: [{ planId: 1, count: 7 }],
                     total: 41,
@@ -621,6 +687,32 @@ test('v2 analytics validates UTC ranges and paginates server aggregates', async 
     })
 
     await page.goto('/main/resources/analytics')
+
+    await expect(
+        page.getByRole('img', { name: 'Rejestracje', exact: true }),
+    ).toBeVisible()
+
+    await page.screenshot({ path: '/tmp/analytics-light.png', fullPage: true })
+
+    await page.getByRole('button', { name: 'Ciemny motyw' }).click()
+
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'black')
+
+    await expect(
+        page.getByRole('img', { name: 'Rejestracje', exact: true }),
+    ).toBeVisible()
+
+    await page.screenshot({ path: '/tmp/analytics-dark.png', fullPage: true })
+
+    await page
+        .locator('summary')
+        .filter({ hasText: 'Pokaż dane tabelaryczne' })
+        .first()
+        .click()
+
+    await expect(
+        page.getByRole('cell', { name: '2026-09-01', exact: true }).first(),
+    ).toBeVisible()
 
     await page
         .getByRole('navigation', { name: 'Raporty analityczne' })
@@ -708,4 +800,491 @@ test('v2 admin can explicitly retry and cancel a booking', async ({ page }) => {
     }
 
     expect(errors).toEqual([])
+})
+
+test('announcement writer creates a scheduled popup and changes its action without stale parameters', async ({
+    page,
+}) => {
+    const { writes, errors } = await mockApi(page, ['writer'])
+
+    await page.goto('/main/resources/app-announcements')
+
+    await expect(page.locator('main h1')).toHaveText('Reklamy w aplikacji')
+
+    await page.getByRole('button', { name: 'Dodaj', exact: true }).click()
+
+    const dialog = page.getByRole('dialog').first()
+
+    await dialog.getByLabel(/^Tytuł/).fill('Jesienna oferta')
+
+    const dates = dialog.locator('input[type="datetime-local"]')
+
+    await dates.nth(0).fill('2026-10-01T10:00')
+
+    await dates.nth(1).fill('2026-10-08T10:00')
+
+    for (const language of ['polski', 'ukraiński', 'angielski', 'rosyjski']) {
+        await dialog.getByLabel(new RegExp(`Obraz — ${language}`)).click()
+
+        await page
+            .getByRole('dialog')
+            .last()
+            .getByRole('button', { name: /^Wybierz / })
+            .first()
+            .click()
+    }
+
+    await dialog
+        .getByLabel(/^Działanie po kliknięciu/)
+        .selectOption('external_url')
+
+    await dialog
+        .getByLabel(/^Adres strony HTTPS/)
+        .fill('https://example.com/offer')
+
+    await dialog.getByLabel(/^Działanie po kliknięciu/).selectOption('screen')
+
+    await expect(dialog.getByLabel(/^Adres strony HTTPS/)).toHaveCount(0)
+
+    await dialog
+        .getByLabel(/^Ekran aplikacji/)
+        .selectOption('subscription_plans')
+
+    await dialog.getByLabel(/^Włącz/).selectOption('true')
+
+    await dialog.getByRole('button', { name: 'Dodaj', exact: true }).click()
+
+    await expect(dialog.getByText('Gotowe', { exact: true })).toBeVisible()
+
+    const write = writes.find(
+        (w) => w.path === '/app-announcements' && w.method === 'POST',
+    )
+
+    expect(write?.body).toMatchObject({
+        title: 'Jesienna oferta',
+        enabled: true,
+        actionType: 'screen',
+        actionScreen: 'subscription_plans',
+        imagePlId: 1,
+    })
+
+    expect(write?.body).not.toHaveProperty('actionUrl')
+
+    expect(errors).toEqual([])
+})
+
+for (const blockInitialScripts of [false, true]) {
+    test(`intro redirects without reload when initial scripts are ${blockInitialScripts ? 'unavailable' : 'available'}`, async ({
+        page,
+    }) => {
+        if (blockInitialScripts) {
+            await page.route('**/_next/**', (route) => {
+                const path = new URL(route.request().url()).pathname
+
+                const atIntro =
+                    page.url() === 'about:blank' ||
+                    new URL(page.url()).pathname === '/'
+
+                return atIntro && path.endsWith('.js')
+                    ? route.abort()
+                    : route.continue()
+            })
+        }
+
+        const documents: string[] = []
+
+        page.on('request', (request) => {
+            if (
+                request.isNavigationRequest() &&
+                request.frame() === page.mainFrame()
+            )
+                documents.push(new URL(request.url()).pathname)
+        })
+
+        await page.goto('/', { waitUntil: 'domcontentloaded' })
+
+        await expect(page.getByRole('main')).toContainText(
+            'Witamy w systemie CRM dla menedżerów',
+        )
+
+        await page.waitForURL('**/auth', { timeout: 15000 })
+
+        await expect(
+            page.getByRole('form', { name: 'Logowanie' }),
+        ).toBeVisible()
+
+        expect(documents).toEqual(['/', '/auth'])
+    })
+}
+
+test('manager without admin role can upload a profile avatar', async ({
+    page,
+}) => {
+    const { errors } = await mockApi(page, ['manager'])
+
+    let avatarId: number | null = null
+
+    let uploaded = false
+
+    await page.route('http://api.crm.test/account/me', (route) =>
+        route.fulfill({
+            json: {
+                id: 10,
+                avatarId,
+                email: 'anna@example.test',
+                status: 'active',
+            },
+        }),
+    )
+
+    await page.route('http://api.crm.test/account/me/avatar', async (route) => {
+        expect(route.request().method()).toBe('POST')
+
+        expect(route.request().headers()['content-type']).toContain(
+            'multipart/form-data',
+        )
+
+        expect(route.request().postDataBuffer()?.toString()).toContain(
+            'avatar.png',
+        )
+
+        avatarId = 80
+
+        uploaded = true
+
+        await route.fulfill({ json: { id: 10, avatarId } })
+    })
+
+    await page.route('http://api.crm.test/private-variants/80', (route) =>
+        route.fulfill({
+            json: { id: 80, smallAssetId: 81, mediumAssetId: 81 },
+        }),
+    )
+
+    const png = Buffer.from(
+        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jC1sAAAAASUVORK5CYII=',
+        'base64',
+    )
+
+    await page.route('http://api.crm.test/private-assets/81/file', (route) =>
+        route.fulfill({ contentType: 'image/png', body: png }),
+    )
+
+    await page.goto('/main/profile')
+
+    await page
+        .getByRole('button', { name: 'Zmień zdjęcie', exact: true })
+        .click()
+
+    const dialog = page.getByRole('dialog')
+
+    await dialog.locator('input[type=file]').setInputFiles({
+        name: 'avatar.png',
+        mimeType: 'image/png',
+        buffer: png,
+    })
+
+    await dialog
+        .getByRole('button', { name: 'Zmień zdjęcie', exact: true })
+        .click()
+
+    await expect.poll(() => uploaded).toBe(true)
+
+    await expect(
+        page.locator('section img[src^="blob:"]').first(),
+    ).toBeVisible()
+
+    expect(errors).toEqual([])
+})
+
+test('icon library has dark visual tiles in both themes and icon forms cannot upload', async ({
+    page,
+}) => {
+    const { errors } = await mockApi(page)
+
+    await page.goto('/main/icons')
+
+    const tile = page.getByRole('button', { name: 'Wybierz White house' })
+
+    await expect(tile.locator('img')).toBeVisible()
+
+    await expect
+        .poll(() =>
+            tile
+                .locator('img')
+                .evaluate((img: HTMLImageElement) => img.naturalWidth),
+        )
+        .toBeGreaterThan(0)
+
+    for (const theme of ['white', 'black']) {
+        if (theme === 'black')
+            await page.getByRole('button', { name: 'Ciemny motyw' }).click()
+
+        await expect(
+            page.getByRole('button', { name: 'Dodaj do biblioteki' }),
+        ).toHaveCSS(
+            'background-color',
+            theme === 'black' ? 'rgb(23, 28, 38)' : 'rgb(255, 255, 255)',
+        )
+
+        expect(
+            await tile
+                .locator('span')
+                .first()
+                .evaluate((el) => getComputedStyle(el).backgroundColor),
+        ).toBe('rgb(23, 28, 38)')
+
+        await page.screenshot({
+            path: `test-results/media-library-${theme}.png`,
+            fullPage: true,
+        })
+    }
+
+    await page.goto('/main/legalization/cases')
+
+    await page.getByRole('button', { name: 'Dodaj', exact: true }).click()
+
+    const form = page.getByRole('dialog').first()
+
+    await form.getByText('Wybierz z biblioteki', { exact: true }).click()
+
+    const library = page.getByRole('dialog').last()
+
+    await expect(library.locator('input[type=file]')).toHaveCount(0)
+
+    await library.getByRole('button', { name: 'Wybierz White house' }).click()
+
+    await expect(form.locator('img')).toBeVisible()
+
+    await expect(
+        form.getByRole('button', { name: /Dodaj nowe zdjęcie/ }),
+    ).toHaveCount(0)
+
+    expect(errors).toEqual([])
+})
+
+test('instruction covers select only from their bucket and block photos can upload or select', async ({
+    page,
+}) => {
+    const { errors } = await mockApi(page)
+
+    const requestedBuckets: string[] = []
+
+    page.on('request', (request) => {
+        const url = new URL(request.url())
+
+        if (url.pathname === '/private-variants')
+            requestedBuckets.push(url.searchParams.get('bucket') ?? '')
+    })
+
+    await page.goto('/main/legalization/instructions')
+
+    await page.getByRole('button', { name: 'Dodaj', exact: true }).click()
+
+    const form = page.getByRole('dialog').first()
+
+    await expect(
+        form.getByRole('button', { name: /Dodaj nowe zdjęcie/ }),
+    ).toHaveCount(0)
+
+    await form.getByText('Wybierz z biblioteki', { exact: true }).click()
+
+    await page
+        .getByRole('dialog')
+        .last()
+        .getByRole('button', { name: 'Wybierz Instruction cover' })
+        .click()
+
+    await expect(form.locator('img')).toBeVisible()
+
+    expect(requestedBuckets).toContain('instruction_headers')
+
+    await page.goto('/main/resources/case-instruction-blocks?instructionId=1')
+
+    await page.getByRole('button', { name: 'Dodaj', exact: true }).click()
+
+    const block = page.getByRole('dialog').first()
+
+    await block.getByLabel(/^Typ/).selectOption('photo')
+
+    await expect(
+        block.getByRole('button', { name: 'Dodaj nowe zdjęcie', exact: true }),
+    ).toBeVisible()
+
+    await block.getByText('Wybierz z biblioteki', { exact: true }).click()
+
+    await page
+        .getByRole('dialog')
+        .last()
+        .getByRole('button', { name: 'Wybierz Instruction cover' })
+        .click()
+
+    expect(requestedBuckets).toContain('instruction_images')
+
+    await block.getByLabel(/^Typ/).selectOption('text')
+
+    await expect(
+        block.getByRole('button', {
+            name: 'Wybierz z biblioteki',
+            exact: true,
+        }),
+    ).toHaveCount(0)
+
+    expect(errors).toEqual([])
+})
+
+test('writer selects a previewed email signature for a campaign', async ({
+    page,
+}) => {
+    const { writes, errors } = await mockApi(page, ['writer'])
+
+    await page.goto('/main/mail/jobs')
+
+    await page.getByRole('button', { name: 'Dodaj', exact: true }).click()
+
+    const form = page.getByRole('dialog')
+
+    await form.getByLabel(/^Tytuł/).fill('Campaign')
+
+    await form.getByLabel(/^Temat/).fill('News')
+
+    await form.getByLabel(/^Konto/).selectOption('RESIDDY_APP')
+
+    await form.getByLabel('Podpis e-mail').selectOption('1')
+
+    await expect(
+        form.getByRole('region', { name: 'Podgląd podpisu e-mail' }),
+    ).toContainText('Zespół Residdy')
+
+    await form.getByLabel('Treść', { exact: true }).fill('Hello')
+
+    await form.getByRole('button', { name: 'Dodaj', exact: true }).click()
+
+    await expect(form.getByText('Gotowe', { exact: true })).toBeVisible()
+
+    expect(
+        writes.find((item) => item.path === '/mail-jobs')?.body,
+    ).toMatchObject({ signatureId: 1 })
+
+    expect(errors).toEqual([])
+})
+
+test('admin creates a company for an existing partner', async ({ page }) => {
+    const { writes, errors } = await mockApi(page, ['admin'])
+    await page.goto('/main/resources/partner-companies')
+    await page.getByRole('button', { name: 'Dodaj', exact: true }).click()
+    const dialog = page.getByRole('dialog')
+    await dialog.getByLabel(/^Partner/).selectOption('1')
+    await dialog.getByLabel(/^Nazwa firmy/).fill('Firma testowa')
+    await dialog.getByRole('button', { name: 'Dodaj', exact: true }).click()
+    await expect(dialog.getByText('Gotowe', { exact: true })).toBeVisible()
+    expect(writes).toContainEqual(
+        expect.objectContaining({
+            path: '/partner-companies',
+            method: 'POST',
+            body: expect.objectContaining({
+                partnerId: 1,
+                companyName: 'Firma testowa',
+            }),
+        }),
+    )
+    expect(errors).toEqual([])
+})
+
+test('manager without admin role cannot create companies', async ({ page }) => {
+    await mockApi(page, ['manager'])
+    await page.goto('/main/resources/partner-companies')
+    await expect(page.locator('main h1')).toBeVisible()
+    await expect(
+        page.getByRole('button', { name: 'Dodaj', exact: true }),
+    ).toBeDisabled()
+})
+
+test('banner preview and actions follow moderation status', async ({
+    page,
+}) => {
+    await mockApi(page, ['admin'])
+    let status = 'pending_review'
+    const banner = () => ({
+        id: 91,
+        companyId: 7,
+        company: { id: 7, companyName: 'Atlantis', status: 'active' },
+        photoId: 5,
+        type: 'small',
+        status,
+        titlePl: 'Konsultacje z Atlantis',
+        subtitlePl: 'Omów swoją sprawę ze specjalistą.',
+        titleEn: 'Consult Atlantis',
+        subtitleEn: 'Discuss your case.',
+        viewsCount: 250,
+        clicksCount: 10,
+        linkUrl: 'https://atlantis.info.pl',
+        maxViews: null,
+    })
+    await page.route(
+        'http://api.crm.test/partner-banners/**',
+        async (route) => {
+            const path = new URL(route.request().url()).pathname
+            if (route.request().method() === 'PATCH') {
+                status = path.endsWith('/approve')
+                    ? 'approved'
+                    : path.endsWith('/activate')
+                      ? 'active'
+                      : 'finished'
+            }
+            await route.fulfill({ json: banner() })
+        },
+    )
+    await page.goto('/main/resources/partner-banners/91')
+    await expect(
+        page.getByRole('heading', { name: 'Podgląd reklamy' }),
+    ).toBeVisible()
+    await expect(
+        page.getByText('Mały baner · 370 × 120', { exact: false }),
+    ).toBeVisible()
+    await page.getByLabel('Język podglądu').selectOption('En')
+    await expect(
+        page.getByText('Consult Atlantis', { exact: true }),
+    ).toBeVisible()
+    await page.getByLabel('Język podglądu').selectOption('Pl')
+    for (const method of ['approve', 'activate', 'finish']) {
+        const names = {
+            approve: 'Zatwierdź',
+            activate: 'Aktywuj',
+            finish: 'Zakończ',
+        }
+        await page
+            .getByRole('button', {
+                name: names[method as keyof typeof names],
+                exact: true,
+            })
+            .click()
+        await page
+            .getByRole('dialog')
+            .getByRole('button', {
+                name: names[method as keyof typeof names],
+                exact: true,
+            })
+            .click()
+        await expect(page.getByRole('dialog')).toHaveCount(0)
+        if (method === 'approve')
+            await expect(
+                page.getByRole('button', { name: 'Zatwierdź', exact: true }),
+            ).toHaveCount(0)
+        if (method === 'activate') {
+            await expect(
+                page.getByRole('button', { name: 'Aktywuj', exact: true }),
+            ).toHaveCount(0)
+            await expect(
+                page.getByText('Reklama jest aktywna.', { exact: false }),
+            ).toBeVisible()
+            await page.screenshot({
+                path: '/tmp/manager-banner-preview.png',
+                fullPage: true,
+            })
+        }
+    }
+    await expect(
+        page.getByText('Wyświetlanie reklamy zostało zakończone.'),
+    ).toBeVisible()
 })

@@ -1,8 +1,11 @@
+import type { MailSignatureSnapshot } from '../mail-signatures/mail-signatures.types'
 import type { AccountStatus } from '../../accounts/accounts/accounts.types'
 import type { AccountType, Languages } from '../../common.types'
 import type { MailAccount } from '../mail-accounts/mail-accounts.types'
 
 export interface MailJob {
+    signatureId: number | null
+    signatureSnapshot: MailSignatureSnapshot | null
     id: number
     title: string
     account: MailAccount
@@ -47,6 +50,7 @@ export enum MailJobStatus {
 }
 
 export interface CreateMailJobDto {
+    signatureId?: number
     title: string
     account: MailAccount
     subject: string
@@ -82,6 +86,7 @@ export interface MailJobsQuery {
 }
 
 export interface UpdateMailJobDto {
+    signatureId?: number | null
     title?: string
     subject?: string
     html?: string

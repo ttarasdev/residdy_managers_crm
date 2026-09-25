@@ -24,7 +24,7 @@ afterEach(() => {
 })
 
 test('every generated API operation has a resource and every field has a usable schema', () => {
-    assert.equal(operations.length, 217)
+    assert.equal(operations.length, 233)
 
     assert.equal(
         new Set(operations.map((item) => item.id)).size,
@@ -331,5 +331,217 @@ test('backend v2 schemas and UI validation preserve limit sentinels and exclude 
                 ),
             }),
         /2 MB/,
+    )
+})
+
+test('analytics charts preserve dimensions, currency boundaries and exact amount safety', () => {
+    const { analyticsCharts } = load('analytics-charts.js')
+
+    const [registrations] = analyticsCharts('registrations', [
+        { period: '2026-09-01', type: 'users', count: 3 },
+        { period: '2026-09-01', type: 'managers', count: 1 },
+        { period: '2026-09-02', type: 'users', count: 4 },
+    ])
+
+    assert.equal(registrations.kind, 'line')
+
+    assert.deepEqual(
+        registrations.series.map((series) => series.values),
+        [
+            [3, 4],
+            [1, 0],
+        ],
+    )
+
+    const money = analyticsCharts('series', [
+        {
+            period: '2026-09-01',
+            currency: 'PLN',
+            kind: 'payment',
+            amountMinor: '100',
+        },
+        {
+            period: '2026-09-01',
+            currency: 'EUR',
+            kind: 'refund',
+            amountMinor: '50',
+        },
+    ])
+
+    assert.equal(money.length, 2)
+
+    assert.match(money[0].title, /PLN/)
+
+    assert.match(money[1].title, /EUR/)
+
+    assert.deepEqual(
+        analyticsCharts('series', [
+            {
+                period: '2026-09-01',
+                currency: 'PLN',
+                amountMinor: '9007199254740993',
+            },
+        ]),
+        [],
+    )
+
+    assert.deepEqual(analyticsCharts('registrations', []), [])
+
+    assert.match(
+        analyticsCharts('plans', {
+            rows: [{ planId: 1, count: 3 }],
+            total: 50,
+        })[0].note,
+        /bieżącej strony/,
+    )
+})
+
+test('announcement management is writer-only and replace preserves schedule and clears optional action fields', () => {
+    const resource = resources.find((r) => r.id === 'app-announcements')
+
+    assert.deepEqual(resource.roles, ['writer'])
+
+    const actions = operations.filter((o) => o.resource === resource.id)
+
+    assert.equal(actions.length, 6)
+
+    for (const action of actions) assert.deepEqual(action.roles, ['writer'])
+
+    const update = getOperation(resource.id, 'update')
+
+    assert.equal(update.verb, 'PUT')
+
+    const record = {
+        id: 5,
+        title: 'Promo',
+        enabled: true,
+        startsAt: '2026-10-01T10:00:00Z',
+        endsAt: '2026-10-02T10:00:00Z',
+        imagePlId: 1,
+        imageUaId: 1,
+        imageEnId: 1,
+        imageRuId: 1,
+        actionType: 'none',
+        actionUrl: null,
+        actionScreen: null,
+        actionRecordType: null,
+        actionRecordId: null,
+    }
+
+    const args = buildArgs(update, initialValues(update, record))
+
+    assert.equal(args[0], 5)
+
+    assert.equal(args[1].startsAt, record.startsAt)
+
+    assert.equal(args[1].actionUrl, undefined)
+})
+
+test('media policies restrict icons and covers to the library, blog to uploads, and preserve nullable block edits', () => {
+    const { mediaPolicy } = load('media.js')
+
+    assert.deepEqual(mediaPolicy('cases', 'iconId', 'public-assets'), {
+        kind: 'public-assets',
+        bucket: 'icons',
+        icon: true,
+        upload: false,
+        browse: true,
+    })
+
+    assert.deepEqual(
+        mediaPolicy('case-instructions', 'headerVariantId', 'private-variants'),
+        {
+            kind: 'private-variants',
+            bucket: 'instruction_headers',
+            upload: false,
+            browse: true,
+        },
+    )
+
+    assert.deepEqual(
+        mediaPolicy('blog-posts', 'variantId', 'private-variants'),
+        {
+            kind: 'private-variants',
+            bucket: 'blog_images',
+            upload: true,
+            browse: false,
+        },
+    )
+
+    const update = getOperation('case-instruction-blocks', 'update')
+
+    assert.deepEqual(
+        buildArgs(update, {
+            id: 5,
+            dto: {
+                type: 'text',
+                variantId: null,
+                contentJson: { type: 'doc', content: [] },
+            },
+        }),
+        [
+            5,
+            {
+                type: 'text',
+                variantId: null,
+                contentJson: { type: 'doc', content: [] },
+            },
+        ],
+    )
+
+    assert.equal(
+        buildArgs(getOperation('mail-jobs', 'update'), {
+            id: 5,
+            dto: { signatureId: null },
+        })[1].signatureId,
+        null,
+    )
+})
+
+test('company creation and banner moderation are restricted to admins', () => {
+    const create = operations.find(
+        (o) => o.resource === 'partner-companies' && o.method === 'create',
+    )
+    assert.ok(create)
+    assert.deepEqual(create.roles, ['admin'])
+    assert.ok(JSON.stringify(create).includes('partnerId'))
+    for (const op of operations.filter(
+        (o) =>
+            o.resource === 'partner-banners' &&
+            ['approve', 'reject', 'activate', 'finish'].includes(o.method),
+    ))
+        assert.deepEqual(op.roles, ['admin'])
+})
+
+test('banner actions expose only valid moderation transitions', () => {
+    const { isBannerActionAvailable } = load('banner-actions.js')
+    const actions = operations.filter((o) => o.resource === 'partner-banners')
+    for (const [status, expected] of Object.entries({
+        pending_review: ['approve', 'reject'],
+        approved: ['activate'],
+        active: ['finish'],
+        finished: ['remove'],
+        rejected: ['remove'],
+        draft: ['remove'],
+    })) {
+        assert.deepEqual(
+            actions
+                .filter((op) =>
+                    isBannerActionAvailable(op, {
+                        status,
+                        company: { status: 'active' },
+                    }),
+                )
+                .map((o) => o.method)
+                .sort(),
+            expected.sort(),
+        )
+    }
+    assert.equal(
+        isBannerActionAvailable(
+            actions.find((o) => o.method === 'activate'),
+            { status: 'approved', company: { status: 'draft' } },
+        ),
+        false,
     )
 })

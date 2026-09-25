@@ -27,6 +27,7 @@ export function AuthShell({
                 width={203}
                 height={60}
                 alt="Residdy"
+                loading="eager"
             />
             <AuthFormHeader title={title} subtitle={subtitle} />
             {children}

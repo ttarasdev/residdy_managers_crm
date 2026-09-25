@@ -12,6 +12,7 @@ import { ActionDialog } from './ActionDialog'
 import { Button } from '../../../components/ui/Button'
 import { State } from '../../../components/ui/State'
 import c from './crm.module.scss'
+import { Avatar } from '../../../components/ui/Avatar'
 
 export function Profile() {
     const { manager } = useAuth()
@@ -42,6 +43,26 @@ export function Profile() {
                     Edytuj profil
                 </Button>
             </header>
+            <section className={c.card}>
+                <div className={c.cardHeader}>
+                    <Avatar variantId={account.data?.avatarId} size={80} />
+                    <div className={c.grow}>
+                        <h2>Zdjęcie profilowe</h2>
+                        <p className={c.description}>
+                            Widoczne dla wszystkich zalogowanych osób.
+                        </p>
+                    </div>
+                    <Button
+                        onClick={() =>
+                            setAction(
+                                getOperation('accounts', 'uploadMyAvatar')!,
+                            )
+                        }
+                    >
+                        Zmień zdjęcie
+                    </Button>
+                </div>
+            </section>
             <section className={c.card}>
                 <RecordDetails value={manager} />
             </section>

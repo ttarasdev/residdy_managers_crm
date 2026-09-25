@@ -1,4 +1,8 @@
 export enum PrivateBucket {
+    INSTRUCTION_HEADERS = 'instruction_headers',
+    INSTRUCTION_IMAGES = 'instruction_images',
+    BLOG_IMAGES = 'blog_images',
+    MANAGER_FILES = 'manager_files',
     LEGAL_DOCUMENT_DRAFTS = 'legal_document_drafts',
     ACCOUNT_AVA = 'account_ava',
     GDOC_TEMPLATES = 'gdoc_templates',

@@ -44,8 +44,8 @@ export function ActionDialog({
 
             return operation.execute(buildArgs(operation, values))
         },
-        onSuccess: (result) => {
-            void client.invalidateQueries({ queryKey: ['crm'] })
+        onSuccess: async (result) => {
+            await client.invalidateQueries({ queryKey: ['crm'] })
 
             void client.invalidateQueries({ queryKey: ['form-options'] })
 
@@ -123,7 +123,10 @@ export function ActionDialog({
                         </p>
                         {mutation.data !== undefined &&
                             !(mutation.data instanceof Blob) && (
-                                <RecordDetails value={mutation.data} />
+                                <RecordDetails
+                                    value={mutation.data}
+                                    resource={operation.resource}
+                                />
                             )}
                         {['create', 'register', 'copy'].includes(
                             operation.method,
@@ -179,6 +182,7 @@ export function ActionDialog({
                             )}
                             <SchemaForm
                                 fields={fields}
+                                originalRecord={record}
                                 resource={operation.resource}
                                 value={values}
                                 onChange={setValues}

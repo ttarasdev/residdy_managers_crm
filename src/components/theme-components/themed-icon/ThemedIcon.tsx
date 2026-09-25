@@ -6,9 +6,16 @@ interface Props {
     width?: number
     height?: number
     alt?: string
+    loading?: 'eager' | 'lazy'
 }
 
-export function ThemedIcon({ path, width = 15, height = 15, alt = '' }: Props) {
+export function ThemedIcon({
+    path,
+    width = 15,
+    height = 15,
+    alt = '',
+    loading = 'lazy',
+}: Props) {
     return (
         <span
             className={c.icon}
@@ -23,6 +30,7 @@ export function ThemedIcon({ path, width = 15, height = 15, alt = '' }: Props) {
                 width={width}
                 height={height}
                 alt=""
+                loading={loading}
             />
             <Image
                 className={c.dark}
@@ -30,6 +38,7 @@ export function ThemedIcon({ path, width = 15, height = 15, alt = '' }: Props) {
                 width={width}
                 height={height}
                 alt=""
+                loading={loading}
             />
         </span>
     )

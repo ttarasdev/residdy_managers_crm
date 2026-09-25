@@ -1,6 +1,9 @@
 'use client'
 
 import { useId, useState } from 'react'
+import dynamic from 'next/dynamic'
+import { analyticsCharts } from '../analytics-charts'
+import a from './AnalyticsPage.module.scss'
 import { useQuery } from '@tanstack/react-query'
 import { analyticsApi } from '../../../api/analytics/analytics.api'
 import {
@@ -15,6 +18,11 @@ import { RecordDetails } from './RecordDetails'
 import { isRecord, normalizeRows } from '../data'
 import { label, operationLabels } from '../labels'
 import c from './crm.module.scss'
+
+const DataChart = dynamic(
+    () => import('../../../components/chart-components/DataChart'),
+    { ssr: false },
+)
 
 const reports = [
     'overview',
@@ -117,7 +125,7 @@ export function AnalyticsPage() {
                 ))}
             </nav>
             <form
-                className={c.card}
+                className={a.filters}
                 onSubmit={(event) => {
                     event.preventDefault()
 
@@ -151,9 +159,9 @@ export function AnalyticsPage() {
                     setFilters({ ...draft, page: 1 })
                 }}
             >
-                <div className={c.fields}>
+                <div className={a.fields}>
                     <label className={c.field}>
-                        Od (UTC)
+                        <span>Od (UTC)</span>
                         <input
                             type="date"
                             value={draft.from ?? ''}
@@ -166,7 +174,7 @@ export function AnalyticsPage() {
                         />
                     </label>
                     <label className={c.field}>
-                        Do (UTC, bez tego dnia)
+                        <span>Do (UTC, bez tego dnia)</span>
                         <input
                             type="date"
                             value={draft.to ?? ''}
@@ -254,24 +262,49 @@ export function AnalyticsPage() {
 
                         const rows = normalizeRows(value).rows
 
+                        const charts = analyticsCharts(
+                            key,
+                            value,
+                            filters.group,
+                        )
+
+                        const content = table ? (
+                            rows.length ? (
+                                <DataTable
+                                    rows={rows}
+                                    columns={[
+                                        ...new Set(rows.flatMap(Object.keys)),
+                                    ]}
+                                />
+                            ) : (
+                                <State empty="Brak danych w tym zakresie" />
+                            )
+                        ) : (
+                            <RecordDetails value={value} />
+                        )
+
                         return (
-                            <section className={c.card} key={key}>
-                                <h2>{label(key)}</h2>
-                                {table ? (
-                                    rows.length ? (
-                                        <DataTable
-                                            rows={rows}
-                                            columns={[
-                                                ...new Set(
-                                                    rows.flatMap(Object.keys),
-                                                ),
-                                            ]}
-                                        />
-                                    ) : (
-                                        <State empty="Brak danych w tym zakresie" />
-                                    )
+                            <section className={a.section} key={key}>
+                                <header className={a.sectionHeader}>
+                                    <h2>{label(key)}</h2>
+                                </header>
+                                {charts.map((chart) => (
+                                    <DataChart
+                                        key={chart.title}
+                                        {...chart}
+                                        showTitle={charts.length > 1}
+                                    />
+                                ))}
+                                {charts.length ? (
+                                    <details className={a.tableDetails}>
+                                        <summary>
+                                            Pokaż dane tabelaryczne ·{' '}
+                                            {rows.length}
+                                        </summary>
+                                        {content}
+                                    </details>
                                 ) : (
-                                    <RecordDetails value={value} />
+                                    content
                                 )}
                             </section>
                         )
